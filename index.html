@@ -1152,6 +1152,388 @@ svg { display: block; }
   padding: 30px;
 }
 
+/* ============================================================
+   v1.1 additions — sunlight theme, tags, safety, storage, a11y
+   ============================================================ */
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+
+:focus-visible {
+  outline: 2px solid var(--volt);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+/* ---------- tags on run rows ---------- */
+.tag {
+  display: inline-block;
+  font-size: 8.5px;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border-radius: 5px;
+  margin-left: 6px;
+  vertical-align: 1px;
+}
+.tag-demo { background: rgba(255, 138, 76, 0.16); color: var(--orange); }
+.tag-sample { background: rgba(99, 200, 255, 0.16); color: var(--blue); }
+.tag-manual { background: rgba(255, 255, 255, 0.1); color: var(--txt-2); }
+
+/* ---------- inline note banner ---------- */
+.note-banner {
+  margin-top: 12px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--txt-2);
+  background: rgba(99, 200, 255, 0.08);
+  border: 1px solid rgba(99, 200, 255, 0.22);
+}
+.note-banner.warn {
+  background: rgba(255, 138, 76, 0.09);
+  border-color: rgba(255, 138, 76, 0.25);
+}
+.note-banner b { color: var(--txt); }
+
+/* ---------- safety sheet ---------- */
+.safety-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.safety-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  padding: 14px;
+  border-radius: 16px;
+  background: linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.012)), var(--card);
+  border: 1px solid var(--line);
+  text-align: left;
+}
+.safety-btn:active { transform: scale(0.98); }
+.safety-btn.danger { border-color: rgba(255, 97, 105, 0.25); }
+.sb-ico {
+  width: 32px; height: 32px; border-radius: 10px;
+  display: grid; place-items: center; margin-bottom: 5px;
+}
+.sb-ico svg { width: 16px; height: 16px; }
+.sb-t { font-size: 13px; font-weight: 700; letter-spacing: -0.01em; }
+.sb-s { font-size: 10.5px; color: var(--muted); }
+
+/* ---------- storage meter ---------- */
+.storage-meter { padding-top: 4px; }
+
+/* ---------- manual run placeholder ---------- */
+.detail-map.no-route {
+  display: grid;
+  place-items: center;
+  height: 140px;
+}
+.detail-map.no-route > div {
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  color: var(--muted); font-size: 12px; font-weight: 600;
+}
+.detail-map.no-route svg { width: 26px; height: 26px; opacity: 0.6; }
+
+/* ---------- live screen: safety button + background note ---------- */
+.live-share {
+  height: 30px;
+  padding: 0 11px;
+  border-radius: 9px;
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--txt-2);
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid var(--line);
+}
+.live-share:active { transform: scale(0.95); }
+
+.bg-note {
+  margin: 8px 14px 0;
+  padding: 9px 12px;
+  border-radius: 11px;
+  font-size: 11px;
+  line-height: 1.45;
+  color: #FFC9A3;
+  background: rgba(255, 138, 76, 0.12);
+  border: 1px solid rgba(255, 138, 76, 0.28);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.bg-note b { color: #FFD9BE; }
+.bg-note button {
+  margin-left: auto;
+  color: #FFC9A3;
+  font-size: 15px;
+  line-height: 1;
+  padding: 2px 4px;
+  flex: 0 0 auto;
+}
+
+.live-dot.paused {
+  background: var(--orange);
+  animation: none;
+  box-shadow: 0 0 0 4px rgba(255, 138, 76, 0.18);
+}
+
+/* ============================================================
+   SUNLIGHT (LIGHT) THEME
+   The live run screen deliberately stays dark — high contrast is
+   better for the map and it saves battery on OLED. Everything
+   else flips so the phone is readable in direct sun.
+   ============================================================ */
+
+[data-theme="light"] {
+  --bg: #F4F6FA;
+  --bg-1: #EDF1F7;
+  --card: #FFFFFF;
+  --card-2: #F7F9FC;
+  --line: rgba(15, 23, 42, 0.09);
+  --line-strong: rgba(15, 23, 42, 0.16);
+  --txt: #0B1220;
+  --txt-2: #334155;
+  --muted: #64748B;
+  --volt: #4D7C0F;
+  --volt-2: #3F6212;
+  --volt-soft: rgba(77, 124, 15, 0.10);
+  --orange: #C2410C;
+  --blue: #0369A1;
+  --pink: #BE185D;
+  --red: #B91C1C;
+  --shadow: 0 12px 30px rgba(15, 23, 42, 0.10);
+}
+
+[data-theme="light"] body { background: #E7EDF5; color: var(--txt); }
+[data-theme="light"] body::before { opacity: 0.5; }
+
+[data-theme="light"] #app {
+  background: linear-gradient(180deg, #FAFBFD 0%, #F4F6FA 40%, #EEF2F8 100%);
+  box-shadow: 0 0 60px rgba(15, 23, 42, 0.08);
+}
+
+[data-theme="light"] .brand-mark {
+  background: linear-gradient(140deg, #84CC16 0%, #65A30D 55%, #4D7C0F 100%);
+  color: #FFFFFF;
+  box-shadow: 0 6px 16px rgba(77, 124, 15, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+[data-theme="light"] .chip-streak {
+  background: rgba(194, 65, 12, 0.08);
+  border-color: rgba(194, 65, 12, 0.18);
+}
+
+[data-theme="light"] .card,
+[data-theme="light"] .stat-tile,
+[data-theme="light"] .run-item,
+[data-theme="light"] .week-card,
+[data-theme="light"] .pb-card,
+[data-theme="light"] .live-substat,
+[data-theme="light"] .safety-btn {
+  background: #FFFFFF;
+  border-color: rgba(15, 23, 42, 0.09);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+[data-theme="light"] .icon-btn,
+[data-theme="light"] .segmented,
+[data-theme="light"] .stepper,
+[data-theme="light"] .speed-switch,
+[data-theme="light"] .text-input,
+[data-theme="light"] .choice-chip {
+  background: rgba(15, 23, 42, 0.04);
+  border-color: rgba(15, 23, 42, 0.10);
+  color: var(--txt);
+}
+
+[data-theme="light"] .text-input::placeholder { color: #94A3B8; }
+
+[data-theme="light"] .tabbar {
+  background: rgba(255, 255, 255, 0.92);
+  border-top-color: rgba(15, 23, 42, 0.08);
+}
+[data-theme="light"] .tab { color: #64748B; }
+[data-theme="light"] .tab.active { color: #3F6212; background: rgba(77, 124, 15, 0.09); }
+
+[data-theme="light"] .sheet {
+  background: linear-gradient(180deg, #FFFFFF 0%, #F7F9FC 100%);
+  border-color: rgba(15, 23, 42, 0.10);
+  box-shadow: 0 -16px 50px rgba(15, 23, 42, 0.18);
+}
+[data-theme="light"] .modal {
+  background: linear-gradient(180deg, #FFFFFF 0%, #F7F9FC 100%);
+  border-color: rgba(15, 23, 42, 0.10);
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.20);
+}
+[data-theme="light"] .sheet-grab i { background: rgba(15, 23, 42, 0.20); }
+[data-theme="light"] .sheet-close { background: rgba(15, 23, 42, 0.05); color: var(--muted); }
+
+[data-theme="light"] .toast {
+  background: #0B1220;
+  color: #F8FAFC;
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+[data-theme="light"] .btn-ghost {
+  background: #FFFFFF;
+  border-color: rgba(15, 23, 42, 0.14);
+  color: var(--txt);
+}
+[data-theme="light"] .btn-primary {
+  background: linear-gradient(140deg, #A3E635 0%, #84CC16 45%, #65A30D 100%);
+  color: #1A2E05;
+  box-shadow: 0 10px 24px rgba(101, 163, 13, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+
+[data-theme="light"] .hero-card {
+  background:
+    radial-gradient(120% 90% at 50% -20%, rgba(132, 204, 22, 0.18), transparent 62%),
+    #FFFFFF;
+}
+[data-theme="light"] .hero-card::after { border-color: rgba(101, 163, 13, 0.14); }
+
+[data-theme="light"] .big-num { color: #0B1220; }
+[data-theme="light"] .ring-center .big-num { color: #0B1220; }
+
+[data-theme="light"] .today-go { background: #65A30D; color: #FFFFFF; }
+[data-theme="light"] .switch { background: rgba(15, 23, 42, 0.14); }
+[data-theme="light"] .switch i { background: #94A3B8; }
+[data-theme="light"] .switch.on { background: #65A30D; }
+[data-theme="light"] .switch.on i { background: #FFFFFF; }
+
+[data-theme="light"] .progress-bar { background: rgba(15, 23, 42, 0.08); }
+[data-theme="light"] .split-row .sbar { background: rgba(15, 23, 42, 0.07); }
+[data-theme="light"] .w-check { border-color: rgba(15, 23, 42, 0.18); }
+[data-theme="light"] .tag-manual { background: rgba(15, 23, 42, 0.08); color: var(--txt-2); }
+
+[data-theme="light"] .footer-note { color: #94A3B8; }
+[data-theme="light"] .month-label { color: #64748B; }
+
+/* the run screen keeps its dark palette in both themes */
+[data-theme="light"] .run-live {
+  --txt: #EEF3FA;
+  --txt-2: #C3CFDE;
+  --muted: #8493A6;
+  --line: rgba(255, 255, 255, 0.10);
+  --line-strong: rgba(255, 255, 255, 0.18);
+  --volt: #C9FF44;
+  --volt-soft: rgba(201, 255, 68, 0.13);
+  --card: #101823;
+  --orange: #FF8A4C;
+  color: #EEF3FA;
+}
+[data-theme="light"] .paused-veil { color: #EEF3FA; }
+
+/* light-theme ring track contrast */
+[data-theme="light"] .ring-track { stroke: rgba(15, 23, 42, 0.09); }
+[data-theme="light"] .ring-arc { filter: drop-shadow(0 0 8px rgba(101, 163, 13, 0.35)); }
+[data-theme="light"] .goal-ring-sm .pct { color: #1A2E05; }
+
+/* ---------- live map overlays ---------- */
+.return-chip {
+  position: absolute;
+  left: 12px;
+  top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 11px;
+  border-radius: 11px;
+  background: rgba(8, 12, 18, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #EEF3FA;
+  letter-spacing: 0.01em;
+}
+.rc-arrow {
+  display: inline-block;
+  font-size: 12px;
+  color: var(--volt);
+  transition: transform 0.35s ease;
+  transform-origin: 50% 55%;
+}
+.map-credit {
+  position: absolute;
+  left: 12px;
+  bottom: 10px;
+  font-size: 8.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: rgba(238, 243, 250, 0.45);
+  pointer-events: none;
+}
+
+/* keep the live header inside the screen on small phones */
+.live-head { gap: 7px; flex-wrap: nowrap; }
+.live-label { font-size: 10px; letter-spacing: 0.13em; }
+.live-share { padding: 0 9px; font-size: 9.5px; letter-spacing: 0.07em; }
+.speed-switch button { padding: 3px 6px; }
+@media (max-width: 380px) {
+  .live-label { display: none; }
+  .live-share { padding: 0 8px; }
+}
+
+/* ---------- structured workout step card ---------- */
+.step-box {
+  margin: 10px 16px 0;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid var(--line);
+}
+.step-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+.step-kind {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  padding: 3px 7px;
+  border-radius: 6px;
+}
+.step-kind.fast { background: rgba(255, 138, 76, 0.16); color: #FF9A63; }
+.step-kind.recover { background: rgba(99, 200, 255, 0.14); color: #7DD3FC; }
+.step-kind.easy { background: rgba(201, 255, 68, 0.13); color: #C9FF44; }
+.step-count { font-size: 10px; font-weight: 700; letter-spacing: 0.08em; color: var(--muted); }
+.step-label { font-size: 14px; font-weight: 700; letter-spacing: -0.01em; color: #EEF3FA; }
+.step-remain { font-size: 10.5px; color: var(--muted); margin-top: 6px; }
+.step-box .progress-fill.fast { background: linear-gradient(90deg, #FFB37A, #FF8A4C); }
+.step-box .progress-fill.recover { background: linear-gradient(90deg, #9BDCFF, #63C8FF); }
+.step-done {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #C9FF44;
+}
+.step-done svg { width: 16px; height: 16px; }
+
+/* live screen fits a step card on small phones */
+@media (max-height: 780px) {
+  .bg-note { font-size: 10px; padding: 7px 10px; }
+  .step-box { padding: 9px 12px; margin-top: 8px; }
+  .step-label { font-size: 13px; }
+  .live-panel { padding-top: 10px; }
+  .live-substats { margin-top: 8px; }
+}
+
 </style>
 </head>
 <body>
@@ -1205,8 +1587,9 @@ svg { display: block; }
       <div class="run-live">
         <div class="live-head">
           <span class="live-dot" id="liveDot"></span>
-          <span class="live-label">Recording</span>
+          <span class="live-label" id="liveStatusText">Recording</span>
           <span class="spacer"></span>
+          <button class="live-share" data-act="open-safety" aria-label="Safety">Safety</button>
           <span class="badge badge-gps warn" id="liveModeBadge">Locating…</span>
           <div class="speed-switch" id="speedSwitch">
             <button data-mult="1" class="on">1×</button>
@@ -1215,15 +1598,27 @@ svg { display: block; }
           </div>
         </div>
 
+        <div class="bg-note hidden" id="bgNote">
+          <span><b>Keep this screen on.</b> Browsers pause GPS when the screen locks — your route would stop.</span>
+          <button data-act="bg-note-close" aria-label="Dismiss">×</button>
+        </div>
+
         <div class="live-target hidden" id="liveTarget"></div>
 
         <div class="map-wrap">
           <canvas id="liveMap"></canvas>
+          <div class="return-chip hidden" id="returnChip">
+            <span class="rc-arrow" aria-hidden="true">▲</span>
+            <span class="rc-text">0.0 km to start</span>
+          </div>
+          <div class="map-credit">© OpenStreetMap</div>
         </div>
+
+        <div class="step-box hidden" id="stepBox"></div>
 
         <div class="live-panel">
           <div class="live-main">
-            <div class="live-dist num" id="liveDist">0.00</div>
+            <div class="live-dist num" id="liveDist" aria-live="off">0.00</div>
             <span class="live-unit" id="liveUnit">KM</span>
           </div>
           <div class="live-substats">
@@ -1243,6 +1638,7 @@ svg { display: block; }
           </div>
           <div class="last-split" id="lastSplit">Waiting for first split</div>
           <div class="next-cue" id="nextCue"></div>
+          <div id="liveA11y" class="sr-only" aria-live="polite"></div>
         </div>
 
         <div class="live-controls">
@@ -1303,6 +1699,21 @@ svg { display: block; }
   <div class="sheet-body" id="sheetSettingsBody"></div>
 </div>
 
+<div class="sheet" id="sheetManual" role="dialog" aria-modal="true" aria-label="Add run manually">
+  <div class="sheet-grab"><i></i></div>
+  <div class="sheet-body" id="sheetManualBody"></div>
+</div>
+
+<div class="sheet" id="sheetShare" role="dialog" aria-modal="true" aria-label="Share run">
+  <div class="sheet-grab"><i></i></div>
+  <div class="sheet-body" id="sheetShareBody"></div>
+</div>
+
+<div class="sheet" id="sheetSafety" role="dialog" aria-modal="true" aria-label="Safety">
+  <div class="sheet-grab"><i></i></div>
+  <div class="sheet-body" id="sheetSafetyBody"></div>
+</div>
+
 <div class="modal" id="modalDialog" role="dialog" aria-modal="true"></div>
 <div class="modal onboard-modal" id="modalOnboard" role="dialog" aria-modal="true" aria-label="Welcome to STRIDE"></div>
 
@@ -1317,7 +1728,7 @@ svg { display: block; }
   </div>
 </div>
 
-<div class="toast" id="toast"></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
 /* ===== js/01-core.js ===== */
@@ -1337,7 +1748,16 @@ const DEFAULT_SETTINGS = {
   voice: true,
   weightKg: 70,
   weeklyGoalKm: 20,
-  demoSpeed: 6
+  demoSpeed: 6,
+  autoPause: true,      // pause automatically when standing still
+  theme: "dark",        // 'dark' | 'light' (sunlight mode)
+  showDemoRuns: false,  // demo runs are hidden from history by default
+  reminders: false,
+  reminderTime: "07:00",
+  safetyName: "",
+  safetyPhone: "",
+  autoSafetyShare: false,
+  mapTiles: true        // real street tiles when online
 };
 
 let state = {
@@ -1375,7 +1795,14 @@ const store = {
   },
   set(k, v) {
     _memStore[k] = v;
-    try { localStorage.setItem(k, v); } catch (e) { /* sandboxed / private mode */ }
+    try {
+      localStorage.setItem(k, v);
+      return { ok: true };
+    } catch (e) {
+      // quota exceeded is the one error worth surfacing — data would be LOST
+      const quota = e && (e.name === "QuotaExceededError" || e.name === "NS_ERROR_DOM_QUOTA_REACHED" || e.code === 22);
+      return { ok: false, quota: !!quota, error: e };
+    }
   },
   del(k) {
     delete _memStore[k];
@@ -1388,7 +1815,7 @@ function loadState() {
   try { raw = store.get(STORE_KEY); } catch (e) {}
   if (raw) {
     try {
-      const parsed = JSON.parse(raw);
+      const parsed = hydrateState(JSON.parse(raw));
       state = {
         settings: { ...DEFAULT_SETTINGS, ...(parsed.settings || {}) },
         runs: Array.isArray(parsed.runs) ? parsed.runs : [],
@@ -1399,8 +1826,92 @@ function loadState() {
   }
 }
 
+/* ---------- compact run storage ----------
+   Points are stored as [latMicroDeg, lngMicroDeg, decisecondsFromStart, altDecimetres, gap?]
+   which is roughly half the size of the readable object form — it buys several
+   more long runs before the ~5 MB localStorage ceiling. Decoded transparently on load. */
+
+function encodePoints(points, t0) {
+  const out = [];
+  for (const p of points) {
+    const row = [
+      Math.round(p.lat * 1e6),
+      Math.round(p.lng * 1e6),
+      Math.round((p.t - t0) / 100),
+      typeof p.alt === "number" && isFinite(p.alt) ? Math.round(p.alt * 10) : null
+    ];
+    if (p.g) row[4] = 1;
+    out.push(row);
+  }
+  return out;
+}
+
+function decodePoints(rows, t0) {
+  if (!Array.isArray(rows)) return [];
+  return rows.map(r => {
+    const p = { lat: r[0] / 1e6, lng: r[1] / 1e6, t: t0 + r[2] * 100 };
+    if (r[3] != null) p.alt = r[3] / 10;
+    if (r[4]) p.g = 1;
+    return p;
+  });
+}
+
+function serializeState() {
+  return JSON.stringify({
+    ...state,
+    runs: state.runs.map(r => {
+      if (!r.points || !r.points.length) return { ...r, points: [] };
+      const t0 = r.points[0].t;
+      return { ...r, t0, points: encodePoints(r.points, t0) };
+    })
+  });
+}
+
+function hydrateState(parsed) {
+  const runs = (parsed.runs || []).map(r => {
+    if (Array.isArray(r.points) && r.points.length && Array.isArray(r.points[0])) {
+      return { ...r, points: decodePoints(r.points, r.t0 || Date.now()) };
+    }
+    return r;
+  });
+  return { ...parsed, runs };
+}
+
+let _storageErrorShown = false;
+
 function saveState() {
-  try { store.set(STORE_KEY, JSON.stringify(state)); } catch (e) {}
+  const payload = serializeState();
+  const res = store.set(STORE_KEY, payload);
+  if (!res || !res.ok) {
+    if (!_storageErrorShown) {
+      _storageErrorShown = true;
+      setTimeout(showStorageError, 60);
+    }
+    return false;
+  }
+  return true;
+}
+
+function storageUsage() {
+  let bytes = 0;
+  try {
+    const raw = store.get(STORE_KEY) || "";
+    bytes = new Blob([raw]).size;
+  } catch (e) {}
+  const limit = 5 * 1024 * 1024;
+  return { bytes, limit, pct: Math.min(1, bytes / limit) };
+}
+
+function showStorageError() {
+  const { bytes } = storageUsage();
+  showDialog({
+    title: "Storage is full — run not saved",
+    text: `Your browser storage is full (~${(bytes / 1048576).toFixed(1)} MB). Export your data (GPX or JSON) and delete some old runs to free space. Nothing new will be saved until then.`,
+    actions: [
+      { label: "Later", style: "btn-ghost" },
+      { label: "Export data", style: "btn-primary", onClick: () => { exportData(); } }
+    ]
+  });
 }
 
 /* ---------- formatting ---------- */
@@ -1609,18 +2120,35 @@ function bestSegment(points, targetMeters) {
   return isFinite(best) ? best : null;
 }
 
+/* GPS altitude noise is ±10–20 m on phones. Raw summing invents tens of metres of
+   "climb" on a flat road. We smooth over a small window and only count a change
+   once it exceeds a real threshold — and the UI labels the result as approximate. */
+const ELEV_WINDOW = 7;
+const ELEV_THRESHOLD_M = 2.5;
+
+function smoothAltSample(buf, alt) {
+  buf.push(alt);
+  if (buf.length > ELEV_WINDOW) buf.shift();
+  let sum = 0;
+  for (const v of buf) sum += v;
+  return sum / buf.length;
+}
+
 function elevationGain(points) {
-  if (!points || points.length < 4) return 0;
+  if (!points || points.length < 6) return 0;
   let gain = 0;
-  let prev = null;
+  let baseline = null;
+  const buf = [];
   for (const p of points) {
-    if (p.g) { prev = null; continue; }
+    if (p.g) { buf.length = 0; baseline = null; continue; }
     if (typeof p.alt !== "number" || !isFinite(p.alt)) continue;
-    if (prev == null) { prev = p.alt; continue; }
-    const delta = p.alt - prev;
-    if (Math.abs(delta) > 0.35) {
+    const s = smoothAltSample(buf, p.alt);
+    if (buf.length < 3) continue;
+    if (baseline == null) { baseline = s; continue; }
+    const delta = s - baseline;
+    if (Math.abs(delta) >= ELEV_THRESHOLD_M) {
       if (delta > 0) gain += delta;
-      prev = p.alt;
+      baseline = s;
     }
   }
   return gain;
@@ -1636,9 +2164,41 @@ function caloriesFor(meters, seconds) {
 
 function runPace(run) { return pacePerUnit(run.distM, run.durS); }
 
+/* ---------- real vs demo data ----------
+   Runs started from "demo mode" are simulations: they must never touch goals,
+   streaks, personal bests or training plans. Sample data is an explicit
+   "show me the charts" switch, so it does count — but it is clearly labelled. */
+
+function realRuns() {
+  return state.runs.filter(r => !r.demo);
+}
+
+function visibleRuns() {
+  const showDemo = !!state.settings.showDemoRuns;
+  return state.runs.filter(r => showDemo || !r.demo);
+}
+
+/* ---------- one source of truth for the weekly goal ---------- */
+
+function effectiveWeeklyGoal() {
+  const plan = state.plan;
+  if (plan) {
+    const wi = planWeekIndex(plan);
+    if (wi >= 0 && wi < plan.weeks) {
+      const total = plan.workouts.filter(w => w.week === wi).reduce((a, w) => a + w.km, 0);
+      if (total > 0) return { km: total, source: "plan", weekIndex: wi };
+    }
+  }
+  return { km: state.settings.weeklyGoalKm, source: "manual", weekIndex: null };
+}
+
 function personalBests() {
   const out = { longest: null, fastest1k: null, fastest5k: null, bestWeek: null };
-  for (const r of state.runs) {
+  for (const r of realRuns()) {
+    if (!r.points || r.points.length < 2) {
+      if (!out.longest || r.distM > out.longest.distM) out.longest = r;
+      continue;
+    }
     if (!out.longest || r.distM > out.longest.distM) out.longest = r;
     const { splits } = computeSplits(r.points, 1000);
     for (const s of splits) {
@@ -1659,7 +2219,7 @@ function personalBests() {
 /** km covered between two timestamps (ms) */
 function kmInWindow(startMs, endMs) {
   let km = 0;
-  for (const r of state.runs) {
+  for (const r of realRuns()) {
     const t = new Date(r.date).getTime();
     if (t >= startMs && t < endMs) km += r.distM / 1000;
   }
@@ -1673,7 +2233,7 @@ function weeklyBuckets(n = 8) {
     const start = new Date(thisMon.getTime() - i * 7 * DAY_MS);
     const end = start.getTime() + 7 * DAY_MS;
     let km = 0, runs = 0;
-    for (const r of state.runs) {
+    for (const r of realRuns()) {
       const t = new Date(r.date).getTime();
       if (t >= start.getTime() && t < end) { km += r.distM / 1000; runs += 1; }
     }
@@ -1694,8 +2254,9 @@ function weekStreak() {
 }
 
 function consecutiveRunDays() {
-  if (!state.runs.length) return 0;
-  const days = new Set(state.runs.map(r => isoDay(r.date)));
+  const runs = realRuns();
+  if (!runs.length) return 0;
+  const days = new Set(runs.map(r => isoDay(r.date)));
   let count = 0;
   const d = new Date();
   d.setHours(12, 0, 0, 0);
@@ -1834,6 +2395,40 @@ function generatePlan(raceKey, levelKey, weeks, startDate = new Date(), opts = {
 
 function workoutKey(w) { return `${w.week}-${w.day}`; }
 
+/* ---------- structured workouts ----------
+   A plan row saying "6 × 400 m fast, 90 s walk" is only a checklist unless the
+   run itself guides you through it. These steps drive live cues. */
+
+function buildWorkoutSteps(type, totalKm) {
+  const steps = [];
+  const easy = (km, label) => steps.push({ kind: "easy", km, label });
+  const fast = (km, label) => steps.push({ kind: "fast", km, label });
+  const recover = (km, label) => steps.push({ kind: "recover", km, label });
+
+  if (type === "intervals") {
+    easy(1, "Warm up");
+    for (let i = 1; i <= 6; i++) {
+      fast(0.4, `Rep ${i} / 6 — fast`);
+      if (i < 6) recover(0.12, `Recover — walk 90 s`);
+    }
+    easy(1, "Cool down");
+  } else if (type === "tempo") {
+    easy(1, "Warm up");
+    fast(Math.max(1.5, totalKm * 0.45), "Tempo — comfortably hard");
+    easy(1, "Cool down");
+  } else if (type === "walkrun") {
+    for (let i = 1; i <= 5; i++) {
+      easy(0.55, `Jog ${i} / 5 — 4 min`);
+      if (i < 5) recover(0.09, `Walk 1 min`);
+    }
+  }
+  return steps.length ? steps : null;
+}
+
+function workoutStepsTotalKm(steps) {
+  return steps ? steps.reduce((a, s) => a + s.km, 0) : 0;
+}
+
 function planWeekIndex(plan) {
   if (!plan) return null;
   const start = mondayOf(new Date(plan.startISO)).getTime();
@@ -1861,6 +2456,29 @@ function todayWorkout() {
   return w ? { workout: w, weekIndex: wi } : { workout: null, weekIndex: wi };
 }
 
+/** sessions in weeks that are already over but were never completed */
+function missedSessions(plan) {
+  if (!plan) return [];
+  const wi = planWeekIndex(plan);
+  if (wi <= 0) return [];
+  const out = [];
+  for (const w of plan.workouts) {
+    if (w.week >= wi) continue;
+    if (w.type === "race") continue;
+    if (!plan.done[workoutKey(w)]) out.push(w);
+  }
+  return out;
+}
+
+/** push the whole plan forward so a bad week doesn't end the plan */
+function shiftPlanWeeks(plan, weeks) {
+  if (!plan) return null;
+  const start = mondayOf(new Date(plan.startISO));
+  plan.startISO = new Date(start.getTime() + weeks * 7 * DAY_MS).toISOString();
+  saveState();
+  return plan;
+}
+
 function planProgress(plan) {
   const total = plan.workouts.length;
   const done = plan.workouts.filter(w => plan.done[workoutKey(w)]).length;
@@ -1868,6 +2486,7 @@ function planProgress(plan) {
 }
 
 function markWorkoutDoneAuto(run) {
+  if (run.demo) return null;          // simulated runs must not tick a plan
   const plan = state.plan;
   if (!plan) return null;
   const wi = planWeekIndex(plan);
@@ -1892,9 +2511,9 @@ function buildInsights(limit = 4) {
   const buckets = weeklyBuckets(8);
   const cur = buckets[buckets.length - 1];
   const prev = buckets[buckets.length - 2];
-  const goalKm = state.settings.weeklyGoalKm;
+  const goalKm = effectiveWeeklyGoal().km;
 
-  if (state.runs.length === 0) {
+  if (realRuns().length === 0) {
     return [{
       icon: "sparkle",
       title: "Your first run is the hardest",
@@ -2023,22 +2642,41 @@ function beep(freq = 880, dur = 0.09, gain = 0.045) {
   } catch (e) {}
 }
 
-function speak(text) {
-  if (!state.settings.voice) return;
+/* Speech used to call cancel() on every cue, which cut the user's music and
+   clipped cues into each other. Now cues are queued and we never cancel audio
+   that isn't ours. */
+let _speechQueue = [];
+let _speechBusy = false;
+
+function _drainSpeech() {
+  if (_speechBusy || !_speechQueue.length) return;
+  const synth = window.speechSynthesis;
+  const text = _speechQueue.shift();
   try {
-    if (!("speechSynthesis" in window)) return;
-    const synth = window.speechSynthesis;
     const u = new SpeechSynthesisUtterance(text);
-    u.rate = 1.03;
+    u.rate = 1.02;
     u.pitch = 1.0;
     u.lang = "en-US";
+    u.volume = 1;
     const voices = synth.getVoices() || [];
     const pick = voices.find(v => /^en[-_]/i.test(v.lang) && /google|samantha|aria|jenny|zira/i.test(v.name)) ||
                  voices.find(v => /^en[-_]/i.test(v.lang));
     if (pick) u.voice = pick;
-    synth.cancel();
+    _speechBusy = true;
+    u.onend = () => { _speechBusy = false; _drainSpeech(); };
+    u.onerror = () => { _speechBusy = false; _drainSpeech(); };
     synth.speak(u);
-  } catch (e) {}
+  } catch (e) {
+    _speechBusy = false;
+  }
+}
+
+function speak(text) {
+  if (!state.settings.voice) return;
+  if (!("speechSynthesis" in window)) return;
+  if (_speechQueue.length > 2) _speechQueue = _speechQueue.slice(-1); // never lag behind
+  _speechQueue.push(text);
+  _drainSpeech();
 }
 
 /* ---------- toast & dialog ---------- */
@@ -2123,9 +2761,10 @@ function goalDisplay() {
   return state.settings.units === "mi" ? Math.round(g / 1.609344) : Math.round(g);
 }
 function setGoalDisplay(v) {
-  state.settings.weeklyGoalKm = state.settings.units === "mi"
-    ? Math.round(clamp(v, 3, 100) * 1.609344)
-    : Math.round(clamp(v, 5, 160));
+  const clamped = state.settings.units === "mi" ? clamp(v, 3, 100) : clamp(v, 5, 160);
+  // store the canonical value without rounding, so switching units back and
+  // forth does not slowly drift the goal
+  state.settings.weeklyGoalKm = state.settings.units === "mi" ? clamped * 1.609344 : clamped;
   saveState();
 }
 
@@ -2149,7 +2788,7 @@ function firstName() {
 /** longest run in the last N days, in km (for adapting plan difficulty) */
 function recentLongestKm(days = 28) {
   const cutoff = Date.now() - days * DAY_MS;
-  const recent = state.runs.filter(r => new Date(r.date).getTime() >= cutoff);
+  const recent = realRuns().filter(r => new Date(r.date).getTime() >= cutoff);
   if (!recent.length) return null;
   return Math.max(...recent.map(r => r.distM)) / 1000;
 }
@@ -2215,6 +2854,122 @@ function ensureCanvasSize(canvas) {
   const ctx = canvas.getContext("2d");
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   return { ctx, w, h };
+}
+
+/* ---------------- optional street tiles (online) ----------------
+   The route, distance and scale all work offline on the plain grid. When the
+   browser has network we lay real OpenStreetMap tiles underneath so the runner
+   can actually see streets and get their bearings. Tiles are cached in memory
+   and never block the draw. */
+
+const TILE_SIZE = 256;
+const TILE_URL = (z, x, y) => `https://tile.openstreetmap.org/${z}/${x}/${y}.png`;
+const _tileCache = new Map();     // "z/x/y" -> { img, ok }
+let _tilesEnabled = true;
+let _tileRepaint = null;          // debounce hook set by drawMap
+
+function lonToTileX(lon, z) { return ((lon + 180) / 360) * Math.pow(2, z); }
+function latToTileY(lat, z) {
+  const rad = (lat * Math.PI) / 180;
+  return ((1 - Math.log(Math.tan(rad) + 1 / Math.cos(rad)) / Math.PI) / 2) * Math.pow(2, z);
+}
+
+/** pick an integer zoom where the whole route fits comfortably */
+function zoomForPoints(points, w, h) {
+  let minLat = 90, maxLat = -90, minLng = 180, maxLng = -180;
+  for (const p of points) {
+    minLat = Math.min(minLat, p.lat); maxLat = Math.max(maxLat, p.lat);
+    minLng = Math.min(minLng, p.lng); maxLng = Math.max(maxLng, p.lng);
+  }
+  const lat0 = (minLat + maxLat) / 2;
+  const mPerPxLng = (haversine({ lat: lat0, lng: minLng }, { lat: lat0, lng: maxLng }) || 60) / Math.max(w - 60, 20);
+  const mPerPxLat = (haversine({ lat: minLat, lng: minLng }, { lat: maxLat, lng: minLng }) || 60) / Math.max(h - 60, 20);
+  const need = Math.max(mPerPxLng, mPerPxLat);       // metres per pixel required
+  const cosLat = Math.cos((lat0 * Math.PI) / 180) || 1;
+  const z = Math.log2((156543.03392 * cosLat) / Math.max(need, 0.01));
+  return clamp(Math.round(z) + 1, 3, 18);
+}
+
+function drawTileLayer(ctx, w, h, points, onLoad) {
+  if (!_tilesEnabled || !points || points.length < 1 || navigator.onLine === false) return false;
+
+  let cLat = 0, cLng = 0;
+  for (const p of points) { cLat += p.lat; cLng += p.lng; }
+  cLat /= points.length; cLng /= points.length;
+
+  const z = zoomForPoints(points, w, h);
+  const scale = Math.pow(2, z);
+  const worldPx = TILE_SIZE * scale;
+  const cx = lonToTileX(cLng, z) * TILE_SIZE;
+  const cy = latToTileY(cLat, z) * TILE_SIZE;
+
+  // top-left of the viewport in world pixels
+  const originX = cx - w / 2;
+  const originY = cy - h / 2;
+
+  const x0 = Math.floor(originX / TILE_SIZE);
+  const y0 = Math.floor(originY / TILE_SIZE);
+  const x1 = Math.floor((originX + w) / TILE_SIZE);
+  const y1 = Math.floor((originY + h) / TILE_SIZE);
+
+  const dark = document.documentElement.dataset.theme !== "light";
+  let pending = 0;
+  let drewAny = false;
+
+  ctx.save();
+  for (let tx = x0; tx <= x1; tx++) {
+    for (let ty = y0; ty <= y1; ty++) {
+      if (ty < 0 || ty >= scale) continue;
+      const wrapped = ((tx % scale) + scale) % scale;
+      const key = `${z}/${wrapped}/${ty}`;
+      let entry = _tileCache.get(key);
+
+      if (!entry) {
+        entry = { img: new Image(), ok: false, loading: true };
+        entry.img.crossOrigin = "anonymous";
+        entry.img.onload = () => {
+          entry.ok = true; entry.loading = false;
+          if (typeof _tileRepaint === "function") _tileRepaint();
+        };
+        entry.img.onerror = () => { entry.loading = false; };
+        entry.img.src = TILE_URL(z, wrapped, ty);
+        _tileCache.set(key, entry);
+        pending++;
+      }
+
+      const dx = Math.round(tx * TILE_SIZE - originX);
+      const dy = Math.round(ty * TILE_SIZE - originY);
+
+      if (entry.ok) {
+        try {
+          if (dark && "filter" in ctx) {
+            ctx.filter = "invert(0.92) hue-rotate(180deg) saturate(0.55) brightness(0.72) contrast(1.05)";
+          }
+          ctx.drawImage(entry.img, dx, dy, TILE_SIZE, TILE_SIZE);
+          if (dark && "filter" in ctx) ctx.filter = "none";
+          drewAny = true;
+        } catch (e) { /* tainted canvas — ignore */ }
+      }
+    }
+  }
+  ctx.restore();
+
+  // subtle dark wash so the volt route always reads clearly
+  if (drewAny) {
+    const wash = ctx.createLinearGradient(0, 0, 0, h);
+    if (dark) {
+      wash.addColorStop(0, "rgba(6,10,15,0.42)");
+      wash.addColorStop(1, "rgba(6,10,15,0.62)");
+    } else {
+      wash.addColorStop(0, "rgba(255,255,255,0.10)");
+      wash.addColorStop(1, "rgba(255,255,255,0.22)");
+    }
+    ctx.fillStyle = wash;
+    ctx.fillRect(0, 0, w, h);
+  }
+
+  if (pending && typeof onLoad === "function") setTimeout(onLoad, 900);
+  return drewAny;
 }
 
 function drawMapBase(ctx, w, h) {
@@ -2321,7 +3076,10 @@ function drawRoute(ctx, pts, opts = {}) {
 
 function drawMap(canvas, points, opts = {}) {
   const { ctx, w, h } = ensureCanvasSize(canvas);
-  drawMapBase(ctx, w, h);
+  _tileRepaint = () => drawMap(canvas, canvas.__lastPoints || points, opts);
+  const hadTiles = drawTileLayer(ctx, w, h, points);
+  if (!hadTiles) drawMapBase(ctx, w, h);
+  if (canvas) canvas.__lastPoints = points;
   if (!points || points.length < 1) {
     ctx.fillStyle = "rgba(132,147,166,0.5)";
     ctx.font = "600 11px Inter, system-ui, sans-serif";
@@ -2441,64 +3199,107 @@ const ACTIVE_KEY = "stride.active.v1";
 
 class LiveSession {
   constructor(mode, opts = {}) {
-    this.mode = mode;                 // 'gps' | 'demo'
-    this.target = opts.target || null; // { km, title }
-    this.status = "running";
+    this.mode = mode;                    // 'gps' | 'demo'
+    this.target = opts.target || null;   // { km, title }
     this.points = [];
     this.watchId = null;
-    this.wallStart = Date.now();
-    this.accMs = 0;
     this.speedMult = 1;
     this.track = null;
     this.trackT0 = null;
     this.gpsAccuracy = null;
     this.gpsError = null;
     this.gpsReady = false;
-    this.lastSplitMeter = 0;
-    this.cues = new Set();
+    this.simulated = false;
     this.finished = false;
     this.startISO = new Date().toISOString();
     this.timer = null;
     this.wakeLock = null;
     this.lastSave = 0;
+
+    // pause state — 'manual' ignores movement, 'auto' resumes on movement
+    this.paused = false;
+    this.pauseReason = null;
+    this.lastMoveT = null;       // wall-clock ms of last real movement
+    this.lastFixT = null;
+
+    // running accumulators (kept incrementally: O(1) per fix, not O(n))
+    this.distM = 0;
+    this.gainM = 0;
+    this.splits = [];
+    this.splitStartDist = 0;
+    this.splitStartT = null;
+    this.elevBuf = [];
+    this.elevBaseline = null;
+
+    // demo clock only
+    this.wallAccMs = 0;
+    this.wallStartAt = Date.now();
+
+    this.cues = new Set();
+    this.lastSplitIndex = 0;
+    this.bgWarned = false;
+
+    // structured workout guidance
+    this.steps = opts.steps || null;
+    this.stepIndex = 0;
+    this.stepStartDist = 0;
   }
 
-  elapsedMs() {
-    const base = this.accMs + (this.status === "running" ? Date.now() - this.wallStart : 0);
-    return base * (this.mode === "demo" ? this.speedMult : 1);
+  /* ---- time ----
+     Moving time: from the first accepted fix to the last one. Because no points
+     are recorded while paused, this automatically excludes pause stops — and
+     the clock does not run while we are still hunting for a GPS lock. */
+  demoElapsedMs() {
+    const base = this.wallAccMs + (this.paused ? 0 : Date.now() - this.wallStartAt);
+    return base * this.speedMult;
+  }
+
+  movingMs() {
+    if (!this.points.length) return 0;
+    const first = this.points[0].t;
+    const last = this.points[this.points.length - 1].t;
+    const live = (!this.paused && !this.simulated) ? Math.max(0, Date.now() - last) : 0;
+    return Math.max(0, last - first) + live;
   }
 
   async start() {
-    $("#liveModeBadge").className = "badge " + (this.mode === "gps" ? "badge-gps warn" : "badge-demo");
-    $("#liveModeBadge").textContent = this.mode === "gps" ? "Locating…" : "Demo mode";
+    const badge = $("#liveModeBadge");
+    badge.className = "badge " + (this.mode === "gps" ? "badge-gps warn" : "badge-demo");
+    badge.textContent = this.mode === "gps" ? "Locating…" : "Demo mode";
     $("#liveDot").style.display = "";
-    $("#ctrlPause").className = "ctrl ctrl-pause";
-    $("#ctrlPause").innerHTML = icon("pause") + "<span>Pause</span>";
+    if ($("#liveStatusText")) $("#liveStatusText").textContent = this.mode === "gps" ? "Waiting for GPS" : "Recording";
+    this.updatePauseUI();
     $("#pausedVeil").classList.add("hidden");
     $("#nextCue").textContent = "";
 
     if (this.target) {
-      $("#liveTarget").textContent = `Target · ${fmtDist1(this.target.km * 1000)} ${unitDef().label} · ${this.target.title}`;
+      $("#liveTarget").textContent = this.steps
+        ? `${this.target.title} · ${this.steps.length} steps`
+        : `Target · ${fmtDist1(this.target.km * 1000)} ${unitDef().label} · ${this.target.title}`;
       $("#liveTarget").classList.remove("hidden");
     } else {
       $("#liveTarget").classList.add("hidden");
     }
+
+    const speedBox = $("#speedSwitch");
+    if (speedBox) speedBox.classList.toggle("hidden", this.mode !== "demo");
 
     if (this.mode === "demo") {
       const km = this.target ? clamp(this.target.km, 1, 12) : 5;
       this.track = makeDemoRoute(km * 1000, Math.random() * 10, 360);
       this.trackT0 = this.track[0].t;
       this.points = [this.track[0]];
-      $("#liveModeBadge").className = "badge badge-demo";
-      $("#liveModeBadge").textContent = "Demo mode";
+      badge.className = "badge badge-demo";
+      badge.textContent = "Demo mode";
       speak(this.target
         ? `Demo run started. ${this.target.km} kilometers planned.`
         : "Demo run started. Enjoy your run.");
+      this.lastMoveT = Date.now();
     } else {
       this.bindWatch();
-      speak(this.target
-        ? `Run started. ${this.target.km} kilometers planned.`
-        : "Run started. Enjoy your run.");
+      // be honest about the platform limit instead of silently losing the route
+      const note = $("#bgNote");
+      if (note) note.classList.toggle("hidden", !!store.get("stride.bgack"));
     }
 
     requestWakeLock(this);
@@ -2534,8 +3335,11 @@ class LiveSession {
       if (accurate) {
         this.gpsReady = true;
         if (badge) { badge.className = "badge badge-gps"; badge.textContent = "GPS locked"; }
+        if ($("#liveStatusText")) $("#liveStatusText").textContent = "Recording";
         beep(880, 0.09);
-        speak("GPS locked. Your run is being recorded.");
+        speak(this.target
+          ? `GPS locked. ${this.target.km} kilometers planned.`
+          : "GPS locked. Your run has started.");
       } else if (badge) {
         badge.className = "badge badge-gps warn";
         badge.textContent = accuracy ? `Locating ±${Math.round(accuracy)} m` : "Locating…";
@@ -2545,7 +3349,7 @@ class LiveSession {
       badge.textContent = `GPS ±${Math.round(accuracy || 0)} m`;
     }
 
-    if (!this.gpsReady || this.status !== "running") return;
+    if (!this.gpsReady) return;
     if (accuracy && accuracy > 45) return;
 
     const p = {
@@ -2555,15 +3359,89 @@ class LiveSession {
       alt: typeof altitude === "number" ? altitude : null,
       acc: accuracy
     };
+
     const last = this.points[this.points.length - 1];
+
+    // auto-paused: only wake up when the runner actually moves again
+    if (this.paused) {
+      if (this.pauseReason === "manual") return;
+      if (!last) { this.resume(true); }
+      else if (haversine(last, p) >= 10) {
+        this.resume(true);
+      } else {
+        return;
+      }
+    }
+
     if (last) {
       const d = haversine(last, p);
       const dt = Math.max((p.t - last.t) / 1000, 0.5);
-      if (d < 1.4) return;                        // jitter while standing still
-      if (d / dt > 12) p.g = true;                // impossible speed → don't connect the line
+      if (d < 1.4) return;                          // jitter while standing still
+      if (d / dt > 12) {
+        // impossible speed: keep the fix as an anchor but do not connect or count it
+        p.g = true;
+      } else if (!p.g) {
+        this.lastMoveT = Date.now();
+        this.lastFixT = Date.now();
+      }
+    } else {
+      this.lastMoveT = Date.now();
+      this.lastFixT = Date.now();
+      this.splitStartT = p.t;
     }
-    this.points.push(p);
+
+    this.addPoint(p);
     this.tick();
+  }
+
+  /** incremental accumulation — avoids re-walking 10k points four times a second */
+  addPoint(p) {
+    const last = this.points[this.points.length - 1];
+    const unitM = unitDef().m;
+
+    if (last) {
+      const d = p.g ? 0 : haversine(last, p);
+      const dtMs = Math.max(p.t - last.t, 1);
+
+      if (d > 0) {
+        // splits: find every unit boundary crossed inside this segment
+        while (this.splitStartDist + unitM <= this.distM + d) {
+          const need = this.splitStartDist + unitM - this.distM;
+          const frac = clamp(need / d, 0, 1);
+          const crossT = last.t + dtMs * frac;
+          this.splits.push({
+            index: this.splits.length + 1,
+            meters: unitM,
+            seconds: Math.max(0, (crossT - (this.splitStartT || last.t)) / 1000),
+            partial: false
+          });
+          this.splitStartT = crossT;
+          this.splitStartDist += unitM;
+        }
+        this.distM += d;
+
+        // elevation, smoothed so GPS noise does not invent climbs
+        if (typeof p.alt === "number" && isFinite(p.alt)) {
+          const smoothed = smoothAltSample(this.elevBuf, p.alt);
+          if (this.elevBuf.length >= 3) {
+            if (this.elevBaseline == null) this.elevBaseline = smoothed;
+            else {
+              const delta = smoothed - this.elevBaseline;
+              if (Math.abs(delta) >= ELEV_THRESHOLD_M) {
+                if (delta > 0) this.gainM += delta;
+                this.elevBaseline = smoothed;
+              }
+            }
+          }
+        }
+      } else if (p.g) {
+        this.elevBuf.length = 0;
+        this.elevBaseline = null;
+        this.splitStartT = p.t;
+      }
+    }
+
+    this.points.push(p);
   }
 
   /** used by the built-in GPS simulator for testing on desktop */
@@ -2596,37 +3474,53 @@ class LiveSession {
     });
   }
 
-  pause() {
-    if (this.status !== "running") return;
-    this.accMs += Date.now() - this.wallStart;
-    this.status = "paused";
+  pause(auto = false) {
+    if (this.paused) return;
+    this.paused = true;
+    this.pauseReason = auto ? "auto" : "manual";
+    if (this.mode === "demo") this.wallAccMs += Date.now() - this.wallStartAt;
     this.updatePauseUI();
-    $("#pausedVeil").classList.remove("hidden");
-    beep(520, 0.08);
-    speak("Paused.");
+    if (!auto) $("#pausedVeil").classList.remove("hidden");
+    beep(auto ? 560 : 520, 0.08);
+    if (!auto) speak("Paused.");
+    else toast("Auto-paused — you stopped moving");
   }
 
-  resume() {
-    if (this.status !== "paused") return;
-    this.wallStart = Date.now();
-    this.status = "running";
+  resume(auto = false) {
+    if (!this.paused) return;
+    this.paused = false;
+    this.pauseReason = null;
+    if (this.mode === "demo") this.wallStartAt = Date.now();
+    this.lastMoveT = Date.now();
+    this.lastFixT = Date.now();
     this.updatePauseUI();
     $("#pausedVeil").classList.add("hidden");
     beep(760, 0.08);
-    speak("Resumed.");
+    if (!auto) speak("Resumed.");
+    else toast("Moving again — resumed");
   }
 
-  togglePause() { this.status === "running" ? this.pause() : this.resume(); }
+  togglePause() {
+    if (this.paused) this.resume(false);
+    else this.pause(false);
+  }
 
   updatePauseUI() {
     const btn = $("#ctrlPause");
-    if (this.status === "paused") {
+    if (!btn) return;
+    if (this.paused) {
       btn.className = "ctrl ctrl-resume";
       btn.innerHTML = icon("play") + "<span>Resume</span>";
     } else {
       btn.className = "ctrl ctrl-pause";
       btn.innerHTML = icon("pause") + "<span>Pause</span>";
     }
+    const dot = $("#liveDot");
+    if (dot) dot.classList.toggle("paused", this.paused);
+    const st = $("#liveStatusText");
+    if (st) st.textContent = this.paused
+      ? (this.pauseReason === "auto" ? "Auto-paused" : "Paused")
+      : (this.gpsReady || this.mode === "demo" ? "Recording" : "Waiting for GPS");
   }
 
   setSpeed(mult) {
@@ -2635,38 +3529,50 @@ class LiveSession {
   }
 
   stats() {
-    const elapsed = this.elapsedMs() / 1000;
-    let points = this.points;
-    let distM = pathDistance(points);
-    let duration = elapsed;
-
     if (this.mode === "demo" && this.track) {
-      const targetT = this.trackT0 + this.elapsedMs();
-      points = pointsUpToTime(this.track, targetT, this.trackT0);
+      const targetT = this.trackT0 + this.demoElapsedMs();
+      const points = pointsUpToTime(this.track, targetT, this.trackT0);
       this.points = points;
-      distM = pathDistance(points);
-      duration = Math.max(0, (points[points.length - 1].t - this.trackT0) / 1000);
-      if (points.length && points[points.length - 1].t >= this.track[this.track.length - 1].t) {
-        if (this.status === "running") {
-          this.pause();
-          toast("Demo route complete — tap Finish to save your run");
-        }
+      const distM = pathDistance(points);
+      const duration = Math.max(0, (points[points.length - 1].t - this.trackT0) / 1000);
+      const splitRes = computeSplits(points, unitDef().m);
+      const whole = splitRes.splits.filter(s => !s.partial);
+      const pace = distM > 20 ? pacePerUnit(distM, duration) : null;
+      if (points[points.length - 1].t >= this.track[this.track.length - 1].t && !this.paused) {
+        this.pause();
+        toast("Demo route complete — tap Finish to save your run");
       }
-    } else if (this.simulated && points.length > 1) {
-      duration = Math.max(0, (points[points.length - 1].t - points[0].t) / 1000);
+      return {
+        distM, duration, pace, splits: whole,
+        lastSplit: whole[whole.length - 1] || null,
+        gain: elevationGain(points), points
+      };
     }
 
-    const pace = distM > 20 ? pacePerUnit(distM, duration) : null;
-    const splits = computeSplits(points, unitDef().m);
-    const whole = splits.splits.filter(s => !s.partial);
-    const lastSplit = whole[whole.length - 1] || null;
-    const gain = elevationGain(points);
-    return { distM, duration, pace, splits: whole, lastSplit, gain, points };
+    const duration = this.movingMs() / 1000;
+    const pace = this.distM > 20 ? pacePerUnit(this.distM, duration) : null;
+    return {
+      distM: this.distM,
+      duration,
+      pace,
+      splits: this.splits,
+      lastSplit: this.splits[this.splits.length - 1] || null,
+      gain: this.gainM,
+      points: this.points
+    };
   }
 
   tick() {
     if (this.finished) return;
+
+    // auto-pause when the runner has not moved for a while
+    if (state.settings.autoPause && !this.paused && this.mode !== "demo" &&
+        this.distM > 60 && this.lastMoveT && Date.now() - this.lastMoveT > 12000) {
+      this.pause(true);
+    }
+
     const s = this.stats();
+    const label = unitDef().label;
 
     $("#liveDist").textContent = fmtDist(s.distM, 2);
     $("#liveTime").textContent = fmtTime(s.duration);
@@ -2675,40 +3581,46 @@ class LiveSession {
     $("#liveCal").textContent = String(caloriesFor(s.distM, s.duration));
     $("#liveGain").textContent = String(Math.round(s.gain));
 
-    drawMap($("#liveMap"), s.points, { live: this.status === "running" });
+    // screen-reader friendly summary
+    const live = $("#liveA11y");
+    if (live) {
+      live.textContent = `${fmtDist(s.distM, 2)} ${label}, ${fmtTime(s.duration)}, pace ${fmtPace(s.pace)} per ${label}`;
+    }
 
-    // ----- target / split progress line -----
-    const label = unitDef().label;
+    drawMap($("#liveMap"), s.points, { live: !this.paused });
+    this.updateReturnToStart(s.points);
+
     if (this.target) {
       const left = this.target.km * 1000 - s.distM;
       if (left <= 0) {
         $("#nextCue").textContent = `Target complete — ${fmtDist1(s.distM)} ${label} done`;
         if (!this.cues.has("target")) {
           this.cues.add("target");
-          speak(`Target distance reached. Great running. ${fmtDist1(s.distM)} kilometers.`);
+          speak(`Target distance reached. ${fmtDist1(s.distM)} kilometers. Great running.`);
           beep(980, 0.14);
         }
       } else {
         const nextKm = (s.splits.length + 1) * unitDef().m;
-        const toSplit = nextKm - s.distM;
-        $("#nextCue").textContent = `${fmtDist1(left)} ${label} to target · next split in ${Math.max(0, Math.round(toSplit))} m`;
+        $("#nextCue").textContent = `${fmtDist1(left)} ${label} to target · next split in ${Math.max(0, Math.round(nextKm - s.distM))} m`;
       }
     } else {
       const nextKm = (s.splits.length + 1) * unitDef().m;
       const toSplit = nextKm - s.distM;
-      $("#nextCue").textContent = s.distM < 15
-        ? (this.mode === "gps" ? "Waiting for GPS movement…" : "Simulating route…")
-        : `Next ${label} split in ${Math.max(0, Math.round(toSplit))} m`;
+      $("#nextCue").textContent = !this.gpsReady && this.mode === "gps"
+        ? "Waiting for GPS — timer starts when you do"
+        : s.distM < 15
+          ? "Start moving to begin tracking"
+          : `Next ${label} split in ${Math.max(0, Math.round(toSplit))} m`;
     }
 
-    // ----- split announcements -----
-    if (s.lastSplit && s.lastSplit.index > this.lastSplitMeter) {
-      this.lastSplitMeter = s.lastSplit.index;
+    this.updateWorkoutStep(s);
+
+    if (s.lastSplit && s.lastSplit.index > this.lastSplitIndex) {
+      this.lastSplitIndex = s.lastSplit.index;
       const paceTxt = fmtPace(pacePerUnit(s.lastSplit.meters, s.lastSplit.seconds));
-      const unitWord = state.settings.units === "mi" ? "mile" : "kilometer";
       $("#lastSplit").textContent = `Last split · ${paceTxt}${unitDef().pace}`;
       beep(880, 0.1);
-      speak(`${s.lastSplit.index} ${unitWord}. ${paceSpeech(pacePerUnit(s.lastSplit.meters, s.lastSplit.seconds))}.`);
+      speak(`${s.lastSplit.index} ${unitDef().label === "mi" ? "mile" : "kilometer"}. ${paceSpeech(pacePerUnit(s.lastSplit.meters, s.lastSplit.seconds))}.`);
     }
 
     if (Date.now() - this.lastSave > 5000) {
@@ -2717,17 +3629,89 @@ class LiveSession {
     }
   }
 
+  updateWorkoutStep(s) {
+    const box = $("#stepBox");
+    if (!box) return;
+    if (!this.steps || !this.steps.length) { box.classList.add("hidden"); return; }
+
+    box.classList.remove("hidden");
+    let step = this.steps[this.stepIndex];
+    const stepKm = step ? step.km : 0;
+    let into = (s.distM - this.stepStartDist) / 1000;
+
+    while (step && into >= stepKm) {
+      this.stepStartDist += stepKm * 1000;
+      this.stepIndex++;
+      into = (s.distM - this.stepStartDist) / 1000;
+      step = this.steps[this.stepIndex];
+      if (step) {
+        const msg = step.kind === "fast"
+          ? `${step.label}. Go!`
+          : step.kind === "recover"
+            ? `${step.label}.`
+            : `${step.label}. Easy pace.`;
+        beep(step.kind === "fast" ? 1180 : 660, 0.13);
+        setTimeout(() => beep(step.kind === "fast" ? 1180 : 660, 0.1), 190);
+        speak(msg);
+      }
+    }
+
+    if (!step) {
+      box.innerHTML = `<div class="step-done">${icon("check")} Workout complete — cool down and finish</div>`;
+      if (!this.cues.has("steps")) {
+        this.cues.add("steps");
+        speak("All reps done. Great session.");
+      }
+      return;
+    }
+
+    const remaining = Math.max(0, stepKm - into);
+    const pct = stepKm ? clamp(into / stepKm, 0, 1) : 0;
+    const kindClass = step.kind === "fast" ? "fast" : step.kind === "recover" ? "recover" : "easy";
+    box.innerHTML = `
+      <div class="step-head">
+        <span class="step-kind ${kindClass}">${step.kind === "fast" ? "FAST" : step.kind === "recover" ? "RECOVER" : "EASY"}</span>
+        <span class="step-count">Step ${this.stepIndex + 1} / ${this.steps.length}</span>
+      </div>
+      <div class="step-label">${escapeHtml(step.label)}</div>
+      <div class="progress-bar" style="margin-top:8px"><div class="progress-fill ${kindClass}" style="width:${pct * 100}%"></div></div>
+      <div class="step-remain">${fmtDist1(remaining * 1000)} ${unitDef().label} to go in this step</div>
+    `;
+  }
+
+  /** distance + bearing back to where the run started */
+  updateReturnToStart(points) {
+    const el = $("#returnChip");
+    if (!el) return;
+    if (!points || points.length < 3) { el.classList.add("hidden"); return; }
+    const start = points[0];
+    const here = points[points.length - 1];
+    const d = haversine(start, here);
+    if (d < 80) { el.classList.add("hidden"); return; }
+
+    const toRad = Math.PI / 180;
+    const y = Math.sin((start.lng - here.lng) * toRad) * Math.cos(start.lat * toRad);
+    const x = Math.cos(here.lat * toRad) * Math.sin(start.lat * toRad) -
+              Math.sin(here.lat * toRad) * Math.cos(start.lat * toRad) * Math.cos((start.lng - here.lng) * toRad);
+    const bearing = (Math.atan2(y, x) / toRad + 360) % 360;
+
+    el.classList.remove("hidden");
+    el.querySelector(".rc-arrow").style.transform = `rotate(${bearing}deg)`;
+    el.querySelector(".rc-text").textContent = `${fmtDist1(d)} ${unitDef().label} to start`;
+  }
+
   persist() {
     if (this.mode !== "gps") return;
-    try {
-      store.set(ACTIVE_KEY, JSON.stringify({
-        startISO: this.startISO,
-        target: this.target,
-        points: this.points,
-        accMs: this.accMs,
-        status: "paused"
-      }));
-    } catch (e) {}
+    store.set(ACTIVE_KEY, JSON.stringify({
+      startISO: this.startISO,
+      target: this.target,
+      points: this.points.map(p => ({
+        lat: +p.lat.toFixed(6), lng: +p.lng.toFixed(6), t: p.t,
+        alt: typeof p.alt === "number" ? +p.alt.toFixed(1) : null, g: p.g ? 1 : undefined
+      })),
+      movingMs: this.movingMs(),
+      paused: true
+    }));
   }
 
   stopWatch() {
@@ -2763,21 +3747,20 @@ class LiveSession {
         return out;
       }),
       mode: this.mode,
+      demo: this.mode === "demo",   // simulated runs never enter real stats
       target: this.target,
       calories: caloriesFor(s.distM, s.duration)
     };
 
-    if (run.distM < 30 || run.durS < 10) {
-      return { discarded: true };
-    }
+    if (run.distM < 30 || run.durS < 10) return { discarded: true };
 
     state.runs.push(run);
     const autoDone = markWorkoutDoneAuto(run);
-    saveState();
+    const saved = saveState();
     beep(1040, 0.16);
     setTimeout(() => beep(1320, 0.18), 130);
     speak(`Run complete. ${fmtDistSpeech(run.distM)} in ${fmtTimeSpeech(run.durS)}. Nice work.`);
-    return { run, autoDone };
+    return { run, autoDone, saved };
   }
 
   discard() {
@@ -2827,7 +3810,7 @@ function closeLiveScreen() {
 
 async function beginSession(mode, target) {
   if (liveSession) { try { liveSession.discard(); } catch (e) {} }
-  liveSession = new LiveSession(mode, { target });
+  liveSession = new LiveSession(mode, { target, steps: (target && target.steps) || null });
   ui.pendingTarget = target || null;
   openLiveScreen();
   $("#liveUnit").textContent = unitDef().label.toUpperCase();
@@ -2851,6 +3834,8 @@ function restartSession(mode, target, oldSession) {
 function finishSession() {
   if (!liveSession) return;
   const s = liveSession.stats();
+  const label = unitDef().label;
+
   if (s.distM < 30 || s.duration < 10) {
     showDialog({
       title: "This run is very short",
@@ -2862,7 +3847,17 @@ function finishSession() {
     });
     return;
   }
-  doFinish();
+
+  // never end a run by accident — a stray tap used to destroy the session
+  showDialog({
+    title: "Finish this run?",
+    text: `${fmtDist(s.distM, 2)} ${label} · ${fmtTime(s.duration)} · ${fmtPace(s.pace)}${unitDef().pace}. You can keep running if this was a mis-tap.`,
+    actions: [
+      { label: "Keep running", style: "btn-ghost", onClick: () => { if (liveSession) liveSession.resume(false); } },
+      { label: "Finish & save", style: "btn-primary", onClick: () => doFinish() }
+    ]
+  });
+  if (liveSession) liveSession.pause();
 }
 
 function doFinish() {
@@ -2872,6 +3867,9 @@ function doFinish() {
   if (result && result.discarded) {
     toast("Run discarded");
     return;
+  }
+  if (result && result.saved === false) {
+    toast("Run kept in memory — storage is full");
   }
   if (result && result.run) {
     if (result.autoDone) toast(`Training plan updated — ${result.autoDone.title} complete`);
@@ -2902,9 +3900,10 @@ function checkUnfinishedRun() {
       { label: "Discard", style: "btn-danger", onClick: () => store.del(ACTIVE_KEY) },
       {
         label: "Save run", style: "btn-primary", onClick: () => {
-          const last = data.points[data.points.length - 1];
           const first = data.points[0];
-          const dur = Math.max(1, (last.t - first.t) / 1000);
+          const last = data.points[data.points.length - 1];
+          // prefer the moving time we stored; falls back to point span
+          const dur = Math.max(1, (data.movingMs ? data.movingMs / 1000 : (last.t - first.t) / 1000));
           const run = {
             id: "run_" + Date.now().toString(36),
             date: data.startISO,
@@ -2912,6 +3911,8 @@ function checkUnfinishedRun() {
             durS: Math.round(dur),
             points: data.points,
             mode: "gps",
+            demo: false,
+            recovered: true,
             target: data.target || null,
             calories: caloriesFor(distM, dur)
           };
@@ -2982,12 +3983,16 @@ window.StrideTest = {
 function ringMarkup(size, radius, stroke, pct, gradId) {
   const c = 2 * Math.PI * radius;
   const off = c * (1 - clamp(pct, 0, 1));
+  const light = document.documentElement.dataset.theme === "light";
+  const stops = light
+    ? ["#84CC16", "#65A30D", "#4D7C0F"]
+    : ["#DCFF80", "#C9FF44", "#8FE22F"];
   return `<svg viewBox="0 0 ${size} ${size}">
     <defs>
       <linearGradient id="${gradId}" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0" stop-color="#DCFF80"/>
-        <stop offset="0.55" stop-color="#C9FF44"/>
-        <stop offset="1" stop-color="#8FE22F"/>
+        <stop offset="0" stop-color="${stops[0]}"/>
+        <stop offset="0.55" stop-color="${stops[1]}"/>
+        <stop offset="1" stop-color="${stops[2]}"/>
       </linearGradient>
     </defs>
     <circle class="ring-track" cx="${size / 2}" cy="${size / 2}" r="${radius}" stroke-width="${stroke}"/>
@@ -3017,7 +4022,8 @@ function updateHeader() {
 
 function renderRunTab() {
   const name = firstName();
-  const goalKm = state.settings.weeklyGoalKm;
+  const goal = effectiveWeeklyGoal();
+  const goalKm = goal.km;
   const week = weekStats();
   const weekKm = week.km;
   const pct = clamp(weekKm / goalKm, 0, 1);
@@ -3083,7 +4089,7 @@ function renderRunTab() {
       </div>
     </div>` : "";
 
-  const recent = runsSorted().slice(0, 2);
+  const recent = runsSorted().filter(r => !r.demo).slice(0, 2);
   const recentHtml = recent.length ? `
     <div class="section">
       <div class="section-head">
@@ -3105,7 +4111,7 @@ function renderRunTab() {
 
     <div class="card hero-card">
       <div class="hero-top">
-        <span class="micro">Weekly goal</span>
+        <span class="micro">Weekly goal${goal.source === "plan" ? " · from plan" : ""}</span>
         <span class="micro" style="color:var(--txt-2)">${weekDisp.toFixed(1)} / ${goalDisp} ${u}</span>
       </div>
       <div class="ring-wrap">
@@ -3157,11 +4163,15 @@ function renderRunTab() {
 function runItemMarkup(r) {
   const pace = runPace(r);
   const label = unitDef().label;
+  const tag = r.demo ? `<span class="tag tag-demo">Demo</span>`
+            : r.sample ? `<span class="tag tag-sample">Sample</span>`
+            : r.manual ? `<span class="tag tag-manual">Manual</span>`
+            : "";
   return `
     <button class="run-item" data-act="open-detail" data-id="${r.id}">
       <div class="run-thumb">${routeThumbSVG(r.points, 58)}</div>
       <div class="run-mid">
-        <div class="run-title">${timeOfDayName(r.date)}${r.target ? ` · ${escapeHtml(r.target.title)}` : ""}</div>
+        <div class="run-title">${timeOfDayName(r.date)}${r.target ? ` · ${escapeHtml(r.target.title)}` : ""}${tag}</div>
         <div class="run-meta">${fmtDate(r.date)} · ${fmtClock(r.date)} · ${fmtTime(r.durS)}</div>
       </div>
       <div class="run-right">
@@ -3174,9 +4184,10 @@ function runItemMarkup(r) {
 /* ---------------- history ---------------- */
 
 function renderHistory() {
-  const runs = runsSorted();
-  const totalM = runs.reduce((a, r) => a + r.distM, 0);
-  const totalS = runs.reduce((a, r) => a + r.durS, 0);
+  const runs = runsSorted().filter(r => state.settings.showDemoRuns || !r.demo);
+  const real = realRuns();
+  const totalM = real.reduce((a, r) => a + r.distM, 0);
+  const totalS = real.reduce((a, r) => a + r.durS, 0);
 
   if (!runs.length) {
     $("#historyBody").innerHTML = `
@@ -3188,8 +4199,9 @@ function renderHistory() {
         <div class="empty">
           <div class="empty-art">${icon("route")}</div>
           <h3 class="empty-title">No runs yet</h3>
-          <p class="empty-text">Record your first run with GPS, or take demo mode for a spin and see exactly how STRIDE analyses a run.</p>
+          <p class="empty-text">Record your first run with GPS, add a treadmill session by hand, or explore demo mode.</p>
           <button class="btn btn-primary" data-act="start-run">${icon("play")} Start your first run</button>
+          <button class="btn btn-ghost btn-sm mt-10" data-act="open-manual">${icon("plus")} Add run manually</button>
           <button class="btn btn-ghost btn-sm mt-10" data-act="start-demo">${icon("bolt")} Try demo mode</button>
         </div>
       </div>
@@ -3201,11 +4213,17 @@ function renderHistory() {
   let html = `
     <div class="screen-head">
       <h1 class="screen-title">History</h1>
-      <p class="screen-sub">${runs.length} run${runs.length === 1 ? "" : "s"} · ${fmtDist1(totalM)} ${unitDef().label} total</p>
+      <p class="screen-sub">${real.length} run${real.length === 1 ? "" : "s"} · ${fmtDist1(totalM)} ${unitDef().label} total${runs.length !== real.length ? ` · ${runs.length - real.length} demo` : ""}</p>
+    </div>
+    <div class="row-between" style="gap:8px;margin-bottom:10px">
+      <button class="btn btn-ghost btn-sm" style="width:auto;padding:0 14px" data-act="open-manual">${icon("plus")} Add manually</button>
+      <button class="btn btn-ghost btn-sm" style="width:auto;padding:0 14px" data-act="toggle-demo-view">
+        ${state.settings.showDemoRuns ? "Hide demos" : "Show demos"}
+      </button>
     </div>
     <div class="summary-strip" style="margin-bottom:6px">
       <div class="stat-tile">
-        <div class="val num">${runs.length}</div>
+        <div class="val num">${real.length}</div>
         <div class="lab">Runs</div>
       </div>
       <div class="stat-tile">
@@ -3217,6 +4235,7 @@ function renderHistory() {
         <div class="lab">Time</div>
       </div>
     </div>
+    ${runs.some(r => r.sample) ? `<div class="note-banner">Sample data is loaded — it appears in charts so you can explore. <button class="link-btn" data-act="purge-sample">Remove</button></div>` : ""}
   `;
 
   let lastKey = null;
@@ -3239,6 +4258,7 @@ function renderHistory() {
 
 function drawBarChart(canvas, values, labels, opts = {}) {
   const { ctx, w, h } = ensureCanvasSize(canvas);
+  const pal = chartPalette();
   ctx.clearRect(0, 0, w, h);
   const padT = 24, padB = 22, padL = 8, padR = 8;
   const chartH = Math.max(h - padT - padB, 10);
@@ -3248,7 +4268,7 @@ function drawBarChart(canvas, values, labels, opts = {}) {
   const barW = Math.min(30, slot * 0.52);
 
   // baseline
-  ctx.strokeStyle = "rgba(255,255,255,0.09)";
+  ctx.strokeStyle = pal.grid;
   ctx.lineWidth = 1;
   ctx.beginPath();
   ctx.moveTo(padL, h - padB + 0.5);
@@ -3257,7 +4277,7 @@ function drawBarChart(canvas, values, labels, opts = {}) {
 
   // guide line at max
   ctx.setLineDash([3, 4]);
-  ctx.strokeStyle = "rgba(255,255,255,0.07)";
+  ctx.strokeStyle = pal.gridSoft;
   ctx.beginPath();
   ctx.moveTo(padL, padT);
   ctx.lineTo(w - padR, padT);
@@ -3272,16 +4292,9 @@ function drawBarChart(canvas, values, labels, opts = {}) {
     const isPeak = v === maxV && v > 0;
 
     const g = ctx.createLinearGradient(0, y, 0, h - padB);
-    if (isLast) {
-      g.addColorStop(0, "#D9FF74");
-      g.addColorStop(1, "rgba(201,255,68,0.35)");
-    } else if (isPeak) {
-      g.addColorStop(0, "rgba(201,255,68,0.75)");
-      g.addColorStop(1, "rgba(201,255,68,0.14)");
-    } else {
-      g.addColorStop(0, "rgba(255,255,255,0.34)");
-      g.addColorStop(1, "rgba(255,255,255,0.07)");
-    }
+    const stops = isLast ? pal.barLast : isPeak ? pal.barPeak : pal.barOther;
+    g.addColorStop(0, stops[0]);
+    g.addColorStop(1, stops[1]);
     ctx.fillStyle = g;
     const r = Math.min(barW / 2, 6);
     ctx.beginPath();
@@ -3293,13 +4306,13 @@ function drawBarChart(canvas, values, labels, opts = {}) {
     ctx.fill();
 
     if (v > 0) {
-      ctx.fillStyle = isLast ? "#E9FFB0" : "rgba(195,207,222,0.75)";
+      ctx.fillStyle = isLast ? pal.labelLast : pal.value;
       ctx.font = "800 9.5px Inter, system-ui, sans-serif";
       ctx.textAlign = "center";
       ctx.fillText(v.toFixed(1), x + barW / 2, y - 6);
     }
 
-    ctx.fillStyle = isLast ? "#C9FF44" : "rgba(132,147,166,0.85)";
+    ctx.fillStyle = isLast ? pal.labelLast : pal.label;
     ctx.font = `${isLast ? "800" : "600"} 9px Inter, system-ui, sans-serif`;
     ctx.textAlign = "center";
     ctx.fillText(labels[i], x + barW / 2, h - 7);
@@ -3308,9 +4321,10 @@ function drawBarChart(canvas, values, labels, opts = {}) {
 
 function drawPaceLine(canvas, series, opts = {}) {
   const { ctx, w, h } = ensureCanvasSize(canvas);
+  const pal = chartPalette();
   ctx.clearRect(0, 0, w, h);
   if (series.length < 2) {
-    ctx.fillStyle = "rgba(132,147,166,0.55)";
+    ctx.fillStyle = pal.placeholder;
     ctx.font = "600 11.5px Inter, system-ui, sans-serif";
     ctx.textAlign = "center";
     ctx.fillText("Log two runs to see your pace trend", w / 2, h / 2);
@@ -3334,7 +4348,7 @@ function drawPaceLine(canvas, series, opts = {}) {
   for (let i = 0; i <= 2; i++) {
     const v = minV + ((maxV - minV) / 2) * i;
     const y = yAt(v);
-    ctx.strokeStyle = "rgba(255,255,255,0.06)";
+    ctx.strokeStyle = pal.gridSoft;
     ctx.lineWidth = 1;
     ctx.setLineDash([3, 4]);
     ctx.beginPath();
@@ -3342,7 +4356,7 @@ function drawPaceLine(canvas, series, opts = {}) {
     ctx.lineTo(w - padR, y);
     ctx.stroke();
     ctx.setLineDash([]);
-    ctx.fillStyle = "rgba(132,147,166,0.75)";
+    ctx.fillStyle = pal.label;
     ctx.fillText(fmtPace(v), padL - 7, y + 3);
   }
 
@@ -3350,7 +4364,7 @@ function drawPaceLine(canvas, series, opts = {}) {
 
   // area
   const grad = ctx.createLinearGradient(0, padT, 0, h - padB);
-  grad.addColorStop(0, "rgba(201,255,68,0.22)");
+  grad.addColorStop(0, pal.lineSoft);
   grad.addColorStop(1, "rgba(201,255,68,0)");
   ctx.beginPath();
   ctx.moveTo(pts[0].x, h - padB);
@@ -3363,11 +4377,11 @@ function drawPaceLine(canvas, series, opts = {}) {
   // line
   ctx.beginPath();
   pts.forEach((p, i) => (i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y)));
-  ctx.strokeStyle = "#C9FF44";
+  ctx.strokeStyle = pal.line;
   ctx.lineWidth = 2.4;
   ctx.lineJoin = "round";
   ctx.lineCap = "round";
-  ctx.shadowColor = "rgba(201,255,68,0.5)";
+  ctx.shadowColor = pal.lineSoft;
   ctx.shadowBlur = 9;
   ctx.stroke();
   ctx.shadowBlur = 0;
@@ -3376,21 +4390,21 @@ function drawPaceLine(canvas, series, opts = {}) {
     const last = i === pts.length - 1;
     ctx.beginPath();
     ctx.arc(p.x, p.y, last ? 4.4 : 2.8, 0, Math.PI * 2);
-    ctx.fillStyle = last ? "#FFFFFF" : "#0C131C";
+    ctx.fillStyle = last ? pal.dotFill : pal.dotFill;
     ctx.fill();
-    ctx.strokeStyle = "#C9FF44";
+    ctx.strokeStyle = pal.dotStroke;
     ctx.lineWidth = last ? 2.4 : 1.8;
     ctx.stroke();
   });
 
   ctx.textAlign = "left";
-  ctx.fillStyle = "rgba(132,147,166,0.75)";
+  ctx.fillStyle = pal.label;
   ctx.font = "600 9px Inter, system-ui, sans-serif";
   ctx.fillText(series[0].label, padL, h - 5);
   ctx.textAlign = "right";
   ctx.fillText(series[series.length - 1].label, w - padR, h - 5);
   ctx.textAlign = "left";
-  ctx.fillStyle = "rgba(201,255,68,0.9)";
+  ctx.fillStyle = pal.voltText;
   ctx.font = "800 9px Inter, system-ui, sans-serif";
   ctx.fillText("faster ↑", padL, 11);
 }
@@ -3398,8 +4412,9 @@ function drawPaceLine(canvas, series, opts = {}) {
 /* ---------------- stats ---------------- */
 
 function renderStats() {
-  const runs = runsSorted();
-  const goalKm = state.settings.weeklyGoalKm;
+  const runs = runsSorted().filter(r => !r.demo);
+  const goalInfo = effectiveWeeklyGoal();
+  const goalKm = goalInfo.km;
   const week = weekStats();
   const pct = clamp(week.km / goalKm, 0, 1);
   const u = unitDef().label;
@@ -3440,7 +4455,7 @@ function renderStats() {
         <div class="pct">${Math.round(pct * 100)}%</div>
       </div>
       <div class="goal-info">
-        <div class="gt">Weekly goal</div>
+        <div class="gt">Weekly goal${goalInfo.source === "plan" ? " · from your plan" : ""}</div>
         <div class="gs">${weekDisp.toFixed(1)} of ${goalDisp} ${u} · <b>${Math.max(0, goalDisp - weekDisp).toFixed(1)} ${u} to go</b></div>
         <div class="gs" style="margin-top:6px">${weekStreak() > 0 ? `${weekStreak()}-week streak — keep it alive` : "Start this week to open a new streak"}</div>
       </div>
@@ -3571,6 +4586,7 @@ function renderPlan() {
   const race = RACES[plan.race];
   const lvl = LEVELS[plan.level];
   const prog = planProgress(plan);
+  const missed = missedSessions(plan);
   const wi = planWeekIndex(plan);
   const raceDate = planRaceDate(plan);
   const daysToRace = Math.ceil((raceDate.getTime() - Date.now()) / DAY_MS);
@@ -3657,6 +4673,12 @@ function renderPlan() {
       </div>
     </div>
 
+    ${missed.length ? `
+      <div class="note-banner warn mt-14">
+        <b>${missed.length} session${missed.length === 1 ? "" : "s"} slipped</b> — life happens. Shift the plan forward instead of starting over.
+        <button class="btn btn-ghost btn-sm mt-10" data-act="shift-plan">${icon("calendar")} Shift plan 1 week</button>
+      </div>` : ""}
+
     ${thisWeekRows}
 
     <div class="section">
@@ -3710,7 +4732,9 @@ function openRunDetail(runId) {
       <button class="sheet-close" data-act="close-sheet">${icon("x")}</button>
     </div>
 
-    <div class="detail-map"><canvas id="detailMap"></canvas></div>
+    ${run.points && run.points.length > 1
+      ? `<div class="detail-map"><canvas id="detailMap"></canvas></div>`
+      : `<div class="detail-map no-route"><div>${icon("route")}<span>Manual entry — no route recorded</span></div></div>`}
 
     <div class="detail-stats">
       <div class="dstat"><div class="v num">${fmtDist(run.distM)}<small>${u}</small></div><div class="l">Distance</div></div>
@@ -3727,17 +4751,18 @@ function openRunDetail(runId) {
     </div>
 
     <div class="detail-stats" style="margin-top:14px">
-      <div class="dstat"><div class="v num">${Math.round(gain)}<small>m</small></div><div class="l">Elevation gain</div></div>
+      <div class="dstat"><div class="v num">${Math.round(gain)}<small>m</small></div><div class="l">Elevation · approx</div></div>
       <div class="dstat"><div class="v num">${whole.length ? fmtPace(Math.min(...whole.map(s => pacePerUnit(s.meters, s.seconds)))) : "—"}${whole.length ? `<small>${unitDef().pace}</small>` : ""}</div><div class="l">Best split</div></div>
     </div>
 
-    <button class="btn btn-danger mt-14" data-act="delete-run" data-id="${run.id}">${icon("trash")} Delete this run</button>
+    <button class="btn btn-primary mt-14" data-act="open-share" data-id="${run.id}">${icon("download")} Share card & GPX</button>
+    <button class="btn btn-danger btn-sm mt-10" data-act="delete-run" data-id="${run.id}">${icon("trash")} Delete this run</button>
     <p class="footer-note">GPS jitter is filtered before distance is calculated.</p>
   `;
   openSheet("#sheetDetail");
   requestAnimationFrame(() => {
     const c = $("#detailMap");
-    if (c) drawMap(c, run.points, { scaleBar: true });
+    if (c && run.points && run.points.length) drawMap(c, run.points, { scaleBar: true });
   });
 }
 
@@ -3779,23 +4804,26 @@ function openRunSummary(runId) {
       <div class="chart-sub" style="margin-top:6px">${fmtTime(run.durS)} · ${fmtPace(pace)}${unitDef().pace} · ${run.calories || caloriesFor(run.distM, run.durS)} kcal</div>
     </div>
 
-    <div class="detail-map" style="height:150px;margin-top:14px"><canvas id="summaryMap"></canvas></div>
+    ${run.points && run.points.length > 1
+      ? `<div class="detail-map" style="height:150px;margin-top:14px"><canvas id="summaryMap"></canvas></div>`
+      : ""}
 
     <div class="card insight-card" style="margin-top:14px">
       <div class="insight-ico">${icon("trend")}</div>
       <div class="insight-body">
-        <div class="insight-title">${fastest ? `Fastest ${u}: ${fmtPace(pacePerUnit(fastest.meters, fastest.seconds))}${unitDef().pace}` : "Run analysis"}</div>
+        <div class="insight-title">${fastest ? `Fastest ${u}: ${fmtPace(pacePerUnit(fastest.meters, fastest.seconds))}${unitDef().pace}` : (run.manual ? "Logged by hand" : "Run analysis")}</div>
         <div class="insight-text">${escapeHtml(compareTxt)}</div>
       </div>
     </div>
 
-    <button class="btn btn-primary mt-14" data-act="close-sheet">Done</button>
+    <button class="btn btn-primary mt-14" data-act="open-share" data-id="${run.id}">${icon("download")} Share this run</button>
     <button class="btn btn-ghost btn-sm mt-10" data-act="view-detail" data-id="${run.id}">View full breakdown</button>
+    <button class="btn btn-ghost btn-sm mt-10" data-act="close-sheet">Done</button>
   `;
   openSheet("#sheetSummary");
   requestAnimationFrame(() => {
     const c = $("#summaryMap");
-    if (c) drawMap(c, run.points, { scaleBar: false });
+    if (c && run.points && run.points.length) drawMap(c, run.points, { scaleBar: false });
   });
 }
 
@@ -3946,8 +4974,75 @@ function renderSettings() {
           <button class="switch ${st.voice ? "on" : ""}" data-act="toggle-voice" aria-label="Toggle voice coach"><i></i></button>
         </div>
       </div>
+
+      <div class="setting-row">
+        <div class="setting-info">
+          <div class="setting-name">Auto-pause</div>
+          <div class="setting-desc">Stops the clock when you stop moving</div>
+        </div>
+        <div class="setting-control">
+          <button class="switch ${st.autoPause ? "on" : ""}" data-act="toggle-autopause" aria-label="Toggle auto pause"><i></i></button>
+        </div>
+      </div>
+
+      <div class="setting-row">
+        <div class="setting-info">
+          <div class="setting-name">Street map</div>
+          <div class="setting-desc">${st.mapTiles === false ? "Off — offline grid only" : "On — OpenStreetMap tiles when online"}</div>
+        </div>
+        <div class="setting-control">
+          <button class="switch ${st.mapTiles !== false ? "on" : ""}" data-act="toggle-map" aria-label="Toggle street map"><i></i></button>
+        </div>
+      </div>
+
+      <div class="setting-row">
+        <div class="setting-info">
+          <div class="setting-name">Sunlight mode</div>
+          <div class="setting-desc">High-contrast light theme for daytime runs</div>
+        </div>
+        <div class="setting-control">
+          <button class="switch ${st.theme === "light" ? "on" : ""}" data-act="toggle-theme" aria-label="Toggle sunlight mode"><i></i></button>
+        </div>
+      </div>
     </div>
 
+    <div class="section">
+      <div class="section-head"><h2 class="section-title">Reminders</h2></div>
+      <div class="card" style="padding:6px 15px">
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="setting-name">Daily run reminder</div>
+            <div class="setting-desc">${st.reminders ? "On — we'll nudge you if you haven't run" : "A nudge if you haven't run by this time"}</div>
+          </div>
+          <div class="setting-control">
+            <button class="switch ${st.reminders ? "on" : ""}" data-act="toggle-reminders" aria-label="Toggle reminders"><i></i></button>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="setting-name">Reminder time</div>
+            <div class="setting-desc">Uses this device's local time</div>
+          </div>
+          <div class="setting-control">
+            <input class="text-input" id="reminderTime" type="time" value="${escapeHtml(st.reminderTime)}" style="width:118px;height:38px">
+          </div>
+        </div>
+      </div>
+      <p class="chart-sub" style="padding:8px 4px 0;line-height:1.5">Reminders fire while STRIDE is open or installed to your home screen. Browsers cannot wake a closed tab.</p>
+    </div>
+
+    <div class="section">
+      <div class="section-head"><h2 class="section-title">Safety</h2></div>
+      <div class="card" style="padding:6px 15px">
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="setting-name">${st.safetyName ? escapeHtml(st.safetyName) : "Safety contact"}</div>
+            <div class="setting-desc">${st.safetyPhone ? escapeHtml(st.safetyPhone) : "Share your location in one tap"}</div>
+          </div>
+          <button class="btn btn-ghost btn-sm" style="width:auto;padding:0 14px" data-act="open-safety">${icon("heart")} Open</button>
+        </div>
+      </div>
+    </div>
     <div class="section">
       <div class="section-head"><h2 class="section-title">App</h2></div>
       <div class="card" style="padding:6px 15px">
@@ -3966,17 +5061,38 @@ function renderSettings() {
       <div class="card" style="padding:6px 15px">
         <div class="setting-row">
           <div class="setting-info">
-            <div class="setting-name">Export runs</div>
-            <div class="setting-desc">Download all your data as JSON</div>
+            <div class="setting-name">Export GPX</div>
+            <div class="setting-desc">Import your routes into Strava, Garmin, Apple Health</div>
+          </div>
+          <button class="btn btn-ghost btn-sm" style="width:auto;padding:0 14px" data-act="export-gpx">${icon("download")}</button>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="setting-name">Export JSON</div>
+            <div class="setting-desc">Full backup of runs, plan and settings</div>
           </div>
           <button class="btn btn-ghost btn-sm" style="width:auto;padding:0 14px" data-act="export-data">${icon("download")}</button>
         </div>
         <div class="setting-row">
           <div class="setting-info">
-            <div class="setting-name">Load sample data</div>
-            <div class="setting-desc">See charts and plans with example runs</div>
+            <div class="setting-name">Demo runs in history</div>
+            <div class="setting-desc">Show simulated runs (never counted in stats)</div>
           </div>
-          <button class="btn btn-ghost btn-sm" style="width:auto;padding:0 14px" data-act="sample-data">Add</button>
+          <button class="switch ${st.showDemoRuns ? "on" : ""}" data-act="toggle-demo-view" aria-label="Show demo runs"><i></i></button>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="setting-name">${state.runs.some(r => r.sample) ? "Remove sample data" : "Load sample data"}</div>
+            <div class="setting-desc">${state.runs.some(r => r.sample) ? "Sample runs are currently loaded" : "See charts and plans with example runs"}</div>
+          </div>
+          <button class="btn btn-ghost btn-sm" style="width:auto;padding:0 14px" data-act="${state.runs.some(r => r.sample) ? "purge-sample" : "sample-data"}">${state.runs.some(r => r.sample) ? "Remove" : "Add"}</button>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="setting-name">Remove demo runs</div>
+            <div class="setting-desc">${state.runs.filter(r => r.demo).length} simulated run${state.runs.filter(r => r.demo).length === 1 ? "" : "s"} in history</div>
+          </div>
+          <button class="btn btn-ghost btn-sm" style="width:auto;padding:0 14px" data-act="purge-demo">Clean</button>
         </div>
         <div class="setting-row">
           <div class="setting-info">
@@ -3986,10 +5102,11 @@ function renderSettings() {
           <button class="btn btn-danger btn-sm" style="width:auto;padding:0 14px" data-act="reset-data">Reset</button>
         </div>
       </div>
+      <div style="padding:14px 0 12px">${storageMeterHtml()}</div>
     </div>
 
     <p class="footer-note">
-      STRIDE · GPS Run Tracker · v1.0<br>
+      STRIDE · GPS Run Tracker · v1.1<br>
       Works offline. No account. No tracking.<br>
       Distance and calorie figures are estimates, not medical advice.
     </p>
@@ -4200,7 +5317,759 @@ function resetAll() {
 }
 
 
-/* ===== js/04-app.js ===== */
+/* ===== js/04-extras.js ===== */
+/* ============================================================
+   STRIDE — 04 · EXTRAS
+   Things a real runner needs that the tracker alone can't give:
+   manual/treadmill entry, GPX export, share cards, safety sharing,
+   reminders, sunlight (light) theme and storage health.
+   ============================================================ */
+
+"use strict";
+
+/* ---------------- theme ---------------- */
+
+function applyTheme() {
+  const theme = state.settings.theme === "light" ? "light" : "dark";
+  document.documentElement.dataset.theme = theme;
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) meta.setAttribute("content", theme === "light" ? "#F4F6FA" : "#06090E");
+}
+
+function toggleTheme() {
+  state.settings.theme = state.settings.theme === "light" ? "dark" : "light";
+  saveState();
+  applyTheme();
+  renderAll();
+  if ($("#sheetSettings").classList.contains("open")) renderSettings();
+  toast(state.settings.theme === "light" ? "Sunlight mode on" : "Night mode on");
+}
+
+/* ---------------- duration parsing ---------------- */
+
+/** accepts "32:15", "1:02:15", "32" (minutes) → seconds */
+function parseDurationInput(raw) {
+  const t = String(raw || "").trim();
+  if (!t) return null;
+  const parts = t.split(":").map(p => p.trim());
+  if (parts.some(p => p === "" || isNaN(Number(p)))) return null;
+  const nums = parts.map(Number);
+  if (nums.some(n => n < 0)) return null;
+  if (nums.length === 1) return Math.round(nums[0] * 60);
+  if (nums.length === 2) return Math.round(nums[0] * 60 + nums[1]);
+  if (nums.length === 3) return Math.round(nums[0] * 3600 + nums[1] * 60 + nums[2]);
+  return null;
+}
+
+/* ---------------- GPX export ---------------- */
+
+function buildGpx(run) {
+  const iso = new Date(run.date).toISOString();
+  const name = `${timeOfDayName(run.date)} · ${fmtDist1(run.distM)} ${unitDef().label}`;
+  const pts = (run.points || []).map(p => {
+    const ele = typeof p.alt === "number" ? `<ele>${p.alt.toFixed(1)}</ele>` : "";
+    return `      <trkpt lat="${p.lat.toFixed(6)}" lon="${p.lng.toFixed(6)}">${ele}<time>${new Date(p.t).toISOString()}</time></trkpt>`;
+  }).join("\n");
+
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="STRIDE" xmlns="http://www.topografix.com/GPX/1/1">
+  <metadata><name>${escapeHtml(name)}</name><time>${iso}</time></metadata>
+  <trk>
+    <name>${escapeHtml(name)}</name>
+    <type>running</type>
+    <trkseg>
+${pts}
+    </trkseg>
+  </trk>
+</gpx>`;
+}
+
+function downloadFile(filename, content, mime) {
+  try {
+    const blob = new Blob([content], { type: mime });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 4000);
+    return true;
+  } catch (e) {
+    toast("Download not available in this preview");
+    return false;
+  }
+}
+
+function exportGpx(runId) {
+  const runs = runId ? state.runs.filter(r => r.id === runId) : realRuns().filter(r => r.points && r.points.length > 1);
+  if (!runs.length) { toast("No GPS runs to export"); return; }
+  if (runs.length === 1) {
+    const f = `stride-${isoDay(runs[0].date)}.gpx`;
+    if (downloadFile(f, buildGpx(runs[0]), "application/gpx+xml")) toast("GPX exported — import it into Strava");
+    return;
+  }
+  const all = `<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="STRIDE" xmlns="http://www.topografix.com/GPX/1/1">
+${runs.map(r => {
+    const pts = r.points.map(p => `      <trkpt lat="${p.lat.toFixed(6)}" lon="${p.lng.toFixed(6)}"><time>${new Date(p.t).toISOString()}</time></trkpt>`).join("\n");
+    return `  <trk><name>${escapeHtml(fmtDateFull(r.date))}</name><trkseg>\n${pts}\n  </trkseg></trk>`;
+  }).join("\n")}
+</gpx>`;
+  if (downloadFile(`stride-all-${isoDay(new Date())}.gpx`, all, "application/gpx+xml")) toast(`${runs.length} runs exported as GPX`);
+}
+
+/* ---------------- manual / treadmill entry ---------------- */
+
+function openManualEntry() {
+  const now = new Date();
+  const dateVal = `${isoDay(now)}T${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+  $("#sheetManualBody").innerHTML = `
+    <div class="sheet-head">
+      <div>
+        <div class="sheet-title">Add a run manually</div>
+        <div class="sheet-sub">Treadmill, indoor track, or a run where GPS failed.</div>
+      </div>
+      <button class="sheet-close" data-act="close-sheet">${icon("x")}</button>
+    </div>
+
+    <div class="field">
+      <span class="field-label">Distance (${unitDef().label})</span>
+      <input class="text-input" id="manDist" type="number" inputmode="decimal" step="0.01" min="0" placeholder="5.0">
+    </div>
+
+    <div class="field">
+      <span class="field-label">Duration · mm:ss or h:mm:ss</span>
+      <input class="text-input" id="manDur" type="text" inputmode="numeric" placeholder="32:15">
+    </div>
+
+    <div class="field">
+      <span class="field-label">When</span>
+      <input class="text-input" id="manWhen" type="datetime-local" value="${dateVal}">
+    </div>
+
+    <div class="field">
+      <span class="field-label">Note (optional)</span>
+      <input class="text-input" id="manNote" type="text" maxlength="40" placeholder="Treadmill · 1% incline">
+    </div>
+
+    <div class="card" style="background:rgba(201,255,68,.05);border-color:rgba(201,255,68,.18);padding:13px 15px">
+      <div class="chart-sub" style="font-size:12px">Manual runs count towards your weekly goal, streaks and training plan — but there is no route or split data for them.</div>
+    </div>
+
+    <button class="btn btn-primary mt-14" data-act="save-manual">${icon("check")} Save run</button>
+  `;
+  openSheet("#sheetManual");
+  setTimeout(() => { const el = $("#manDist"); if (el) el.focus(); }, 350);
+}
+
+function saveManualRun() {
+  const distEl = $("#manDist"), durEl = $("#manDur"), whenEl = $("#manWhen"), noteEl = $("#manNote");
+  const distVal = parseFloat(distEl.value);
+  const durS = parseDurationInput(durEl.value);
+
+  if (!isFinite(distVal) || distVal <= 0) {
+    toast("Enter a distance"); distEl.focus(); return;
+  }
+  if (!durS || durS < 30) {
+    toast("Enter a duration like 32:15"); durEl.focus(); return;
+  }
+
+  const distM = distVal * unitDef().m;
+  if (distM / durS > 12) {
+    toast("That pace looks impossible — check distance/time"); return;
+  }
+
+  const when = whenEl.value ? new Date(whenEl.value) : new Date();
+  const run = {
+    id: "run_" + Date.now().toString(36) + Math.random().toString(36).slice(2, 5),
+    date: (isNaN(when.getTime()) ? new Date() : when).toISOString(),
+    distM: Math.round(distM * 10) / 10,
+    durS: Math.round(durS),
+    points: [],
+    mode: "manual",
+    demo: false,
+    manual: true,
+    note: (noteEl.value || "").trim(),
+    calories: caloriesFor(distM, durS)
+  };
+
+  state.runs.push(run);
+  const autoDone = markWorkoutDoneAuto(run);
+  saveState();
+  closeSheets();
+  renderAll();
+  if (autoDone) toast(`Saved · ${autoDone.title} ticked off`);
+  else toast("Manual run saved");
+  openRunSummary(run.id);
+}
+
+/* ---------------- share card ---------------- */
+
+function drawShareCard(canvas, run) {
+  const W = 1080, H = 1350;
+  canvas.width = W;
+  canvas.height = H;
+  const ctx = canvas.getContext("2d");
+  const u = unitDef().label;
+  const pace = runPace(run);
+
+  // background
+  const g = ctx.createLinearGradient(0, 0, W, H);
+  g.addColorStop(0, "#0A0F16");
+  g.addColorStop(0.55, "#070B11");
+  g.addColorStop(1, "#05080D");
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, W, H);
+
+  const glow = ctx.createRadialGradient(W * 0.18, H * 0.1, 0, W * 0.18, H * 0.1, W * 0.85);
+  glow.addColorStop(0, "rgba(201,255,68,0.16)");
+  glow.addColorStop(1, "rgba(201,255,68,0)");
+  ctx.fillStyle = glow;
+  ctx.fillRect(0, 0, W, H);
+
+  // header
+  ctx.fillStyle = "#C9FF44";
+  ctx.font = "800 44px Inter, system-ui, sans-serif";
+  ctx.fillText("STRIDE", 72, 108);
+  ctx.fillStyle = "rgba(238,243,250,0.55)";
+  ctx.font = "700 24px Inter, system-ui, sans-serif";
+  ctx.fillText("GPS RUN TRACKER", 72, 144);
+
+  // route panel
+  const px = 72, py = 190, pw = W - 144, ph = 520;
+  ctx.fillStyle = "rgba(255,255,255,0.035)";
+  roundRect(ctx, px, py, pw, ph, 36);
+  ctx.fill();
+  ctx.strokeStyle = "rgba(255,255,255,0.08)";
+  ctx.lineWidth = 2;
+  roundRect(ctx, px, py, pw, ph, 36);
+  ctx.stroke();
+
+  if (run.points && run.points.length > 1) {
+    const { pts } = projectPoints(run.points, pw, ph, 56);
+    ctx.save();
+    ctx.translate(px, py);
+    ctx.lineJoin = "round";
+    ctx.lineCap = "round";
+    for (const pass of [0, 1]) {
+      ctx.beginPath();
+      let started = false;
+      for (const p of pts) {
+        if (!started || p.g) { ctx.moveTo(p.x, p.y); started = true; }
+        else ctx.lineTo(p.x, p.y);
+      }
+      if (pass === 0) {
+        ctx.strokeStyle = "rgba(201,255,68,0.18)";
+        ctx.lineWidth = 22;
+      } else {
+        ctx.strokeStyle = "#C9FF44";
+        ctx.lineWidth = 7;
+        ctx.shadowColor = "rgba(201,255,68,0.6)";
+        ctx.shadowBlur = 26;
+      }
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+    }
+    const s = pts[0], e = pts[pts.length - 1];
+    ctx.beginPath(); ctx.arc(s.x, s.y, 11, 0, Math.PI * 2);
+    ctx.fillStyle = "#0A0F16"; ctx.fill();
+    ctx.lineWidth = 5; ctx.strokeStyle = "#C9FF44"; ctx.stroke();
+    ctx.beginPath(); ctx.arc(e.x, e.y, 11, 0, Math.PI * 2);
+    ctx.fillStyle = "#EEF3FA"; ctx.fill();
+    ctx.restore();
+  } else {
+    ctx.fillStyle = "rgba(132,147,166,0.65)";
+    ctx.font = "600 30px Inter, system-ui, sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText("Manual entry — no route recorded", W / 2, py + ph / 2);
+    ctx.textAlign = "left";
+  }
+
+  // big distance + unit, centred as one group
+  const distTxt = fmtDist(run.distM, 2);
+  ctx.textAlign = "left";
+  ctx.font = "800 168px Inter, system-ui, sans-serif";
+  const distW = ctx.measureText(distTxt).width;
+  ctx.font = "800 52px Inter, system-ui, sans-serif";
+  const unitW = ctx.measureText(u.toUpperCase()).width;
+  const groupW = distW + 22 + unitW;
+  const startX = (W - groupW) / 2;
+  ctx.fillStyle = "#FFFFFF";
+  ctx.font = "800 168px Inter, system-ui, sans-serif";
+  ctx.fillText(distTxt, startX, 900);
+  ctx.fillStyle = "rgba(132,147,166,0.9)";
+  ctx.font = "800 52px Inter, system-ui, sans-serif";
+  ctx.fillText(u.toUpperCase(), startX + distW + 22, 900);
+
+  // stat row
+  const stats = [
+    ["TIME", fmtTime(run.durS)],
+    ["PACE", `${fmtPace(pace)}`],
+    ["CAL", `${run.calories || caloriesFor(run.distM, run.durS)}`]
+  ];
+  const colW = (W - 144) / 3;
+  stats.forEach(([lab, val], i) => {
+    const cx = 72 + colW * i + colW / 2;
+    ctx.fillStyle = "#EEF3FA";
+    ctx.font = "800 46px Inter, system-ui, sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText(val, cx, 1010);
+    ctx.fillStyle = "rgba(132,147,166,0.8)";
+    ctx.font = "700 24px Inter, system-ui, sans-serif";
+    ctx.fillText(lab, cx, 1050);
+  });
+
+  // footer
+  ctx.textAlign = "center";
+  ctx.fillStyle = "rgba(238,243,250,0.6)";
+  ctx.font = "600 28px Inter, system-ui, sans-serif";
+  ctx.fillText(fmtDateFull(run.date), W / 2, 1160);
+  if (state.settings.name) {
+    ctx.fillStyle = "#C9FF44";
+    ctx.font = "800 30px Inter, system-ui, sans-serif";
+    ctx.fillText(state.settings.name, W / 2, 1214);
+  }
+  ctx.fillStyle = "rgba(132,147,166,0.55)";
+  ctx.font = "600 22px Inter, system-ui, sans-serif";
+  ctx.fillText("made with STRIDE", W / 2, 1280);
+  ctx.textAlign = "left";
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  if (ctx.roundRect) { ctx.beginPath(); ctx.roundRect(x, y, w, h, r); return; }
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
+}
+
+function openShareSheet(runId) {
+  const run = state.runs.find(r => r.id === runId);
+  if (!run) return;
+  $("#sheetShareBody").innerHTML = `
+    <div class="sheet-head">
+      <div>
+        <div class="sheet-title">Share this run</div>
+        <div class="sheet-sub">A ready-made card for WhatsApp or Instagram.</div>
+      </div>
+      <button class="sheet-close" data-act="close-sheet">${icon("x")}</button>
+    </div>
+    <div style="border-radius:18px;overflow:hidden;border:1px solid var(--line)">
+      <canvas id="shareCanvas" style="width:100%;display:block"></canvas>
+    </div>
+    <button class="btn btn-primary mt-14" data-act="share-image" data-id="${run.id}">${icon("download")} Share / save image</button>
+    <button class="btn btn-ghost btn-sm mt-10" data-act="share-gpx" data-id="${run.id}">${icon("route")} Export this run as GPX</button>
+    <p class="footer-note">GPX works with Strava, Garmin, Apple Health and most running apps.</p>
+  `;
+  openSheet("#sheetShare");
+  requestAnimationFrame(() => {
+    const c = $("#shareCanvas");
+    if (c) drawShareCard(c, run);
+  });
+}
+
+async function shareRunImage(runId) {
+  const run = state.runs.find(r => r.id === runId);
+  if (!run) return;
+  const canvas = document.createElement("canvas");
+  drawShareCard(canvas, run);
+
+  const blob = await new Promise(res => {
+    try { canvas.toBlob(res, "image/png", 0.95); } catch (e) { res(null); }
+  });
+
+  if (!blob) { toast("Could not create the image"); return; }
+
+  const file = new File([blob], `stride-${isoDay(run.date)}.png`, { type: "image/png" });
+
+  try {
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      await navigator.share({
+        files: [file],
+        title: "My run on STRIDE",
+        text: `${fmtDist(run.distM, 2)} ${unitDef().label} · ${fmtPace(runPace(run))}${unitDef().pace}`
+      });
+      return;
+    }
+  } catch (e) { /* user cancelled or unsupported → fall through to download */ }
+
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = file.name;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 4000);
+  toast("Image saved — share it anywhere");
+}
+
+/* ---------------- safety (no backend needed) ---------------- */
+
+function normalisePhone(raw) {
+  const digits = String(raw || "").replace(/[^\d]/g, "");
+  if (!digits) return "";
+  if (digits.length === 10) return "91" + digits;      // India default
+  return digits;
+}
+
+function safetyContactReady() {
+  return (state.settings.safetyName || "").trim() && normalisePhone(state.settings.safetyPhone).length >= 10;
+}
+
+function currentPositionForShare() {
+  return new Promise(resolve => {
+    if (!("geolocation" in navigator)) return resolve(null);
+    let done = false;
+    const finish = v => { if (!done) { done = true; resolve(v); } };
+    navigator.geolocation.getCurrentPosition(
+      pos => finish({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+      () => finish(null),
+      { enableHighAccuracy: true, timeout: 8000, maximumAge: 15000 }
+    );
+    setTimeout(() => finish(null), 8500);
+  });
+}
+
+function buildSafetyText(kind, pos) {
+  const name = state.settings.name ? state.settings.name : "I";
+  const where = pos
+    ? `https://maps.google.com/?q=${pos.lat.toFixed(5)},${pos.lng.toFixed(5)}`
+    : "location unavailable right now";
+  if (kind === "start") {
+    return `${name} starting a run now. Live location: ${where} — I'll message when I'm back. (sent via STRIDE)`;
+  }
+  if (kind === "home") {
+    return `${name} is back from the run, safe and sound. (sent via STRIDE)`;
+  }
+  if (kind === "sos") {
+    return `SOS — ${name} needs help on a run. Last known location: ${where} (sent via STRIDE)`;
+  }
+  return `${name} — location: ${where} (sent via STRIDE)`;
+}
+
+async function sendSafetyMessage(kind) {
+  if (!safetyContactReady()) {
+    toast("Add a safety contact in Settings first");
+    openSafetySheet();
+    return;
+  }
+  const pos = await currentPositionForShare();
+  const text = buildSafetyText(kind, pos);
+  const phone = normalisePhone(state.settings.safetyPhone);
+  const wa = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
+
+  // prefer the native share sheet (lets the user pick WhatsApp / SMS / etc.)
+  if (navigator.share) {
+    try {
+      await navigator.share({ text, title: "STRIDE safety" });
+      toast("Safety message shared");
+      return;
+    } catch (e) { /* cancelled → open WhatsApp in a new tab */ }
+  }
+  window.open(wa, "_blank", "noopener");
+}
+
+function openSafetySheet() {
+  const ready = safetyContactReady();
+  const name = state.settings.safetyName || "";
+  const phone = state.settings.safetyPhone || "";
+  $("#sheetSafetyBody").innerHTML = `
+    <div class="sheet-head">
+      <div>
+        <div class="sheet-title">Safety</div>
+        <div class="sheet-sub">Let someone know where you are — no account needed.</div>
+      </div>
+      <button class="sheet-close" data-act="close-sheet">${icon("x")}</button>
+    </div>
+
+    ${ready ? `
+      <div class="card" style="padding:14px 16px">
+        <div class="row-between">
+          <div>
+            <div class="setting-name">${escapeHtml(name)}</div>
+            <div class="setting-desc">${escapeHtml(phone)}</div>
+          </div>
+          <span class="badge badge-gps" style="position:static">Ready</span>
+        </div>
+      </div>
+
+      <div class="safety-grid mt-14">
+        <button class="safety-btn" data-act="safety-send" data-kind="start">
+          <span class="sb-ico" style="color:var(--volt);background:var(--volt-soft)">${icon("route")}</span>
+          <span class="sb-t">I'm starting a run</span>
+          <span class="sb-s">Sends your location</span>
+        </button>
+        <button class="safety-btn" data-act="safety-send" data-kind="home">
+          <span class="sb-ico" style="color:var(--blue);background:rgba(99,200,255,.12)">${icon("check")}</span>
+          <span class="sb-t">I'm home safe</span>
+          <span class="sb-s">Reassure your contact</span>
+        </button>
+        <button class="safety-btn" data-act="safety-send" data-kind="pin">
+          <span class="sb-ico" style="color:var(--orange);background:rgba(255,138,76,.12)">${icon("target")}</span>
+          <span class="sb-t">Share my location</span>
+          <span class="sb-s">One-time pin</span>
+        </button>
+        <button class="safety-btn danger" data-act="safety-send" data-kind="sos">
+          <span class="sb-ico" style="color:#FF8087;background:rgba(255,97,105,.14)">${icon("bolt")}</span>
+          <span class="sb-t">SOS</span>
+          <span class="sb-s">Urgent help message</span>
+        </button>
+      </div>
+
+      <button class="btn btn-ghost btn-sm mt-14" data-act="safety-call">${icon("heart")} Call ${escapeHtml(name.split(" ")[0])}</button>
+    ` : `
+      <div class="card">
+        <div class="empty" style="padding:22px 10px">
+          <div class="empty-art">${icon("heart")}</div>
+          <h3 class="empty-title">Add a safety contact</h3>
+          <p class="empty-text">Someone who should know when you head out and when you're back. Nothing leaves your device unless you tap share.</p>
+        </div>
+      </div>
+    `}
+
+    <div class="field mt-14">
+      <span class="field-label">Contact name</span>
+      <input class="text-input" id="safetyName" placeholder="e.g. Mummy" value="${escapeHtml(name)}" maxlength="24">
+    </div>
+    <div class="field">
+      <span class="field-label">WhatsApp / phone number</span>
+      <input class="text-input" id="safetyPhone" inputmode="tel" placeholder="+91 98765 43210" value="${escapeHtml(phone)}" maxlength="20">
+    </div>
+    <button class="btn btn-ghost btn-sm" data-act="safety-save">${icon("check")} Save contact</button>
+    <p class="footer-note">Runs entirely in your browser — messages open WhatsApp with a Google Maps pin.</p>
+  `;
+  openSheet("#sheetSafety");
+}
+
+function saveSafetyContact() {
+  const n = $("#safetyName"), ph = $("#safetyPhone");
+  state.settings.safetyName = (n.value || "").trim();
+  state.settings.safetyPhone = (ph.value || "").trim();
+  saveState();
+  openSafetySheet();
+  toast(state.settings.safetyName ? "Safety contact saved" : "Contact cleared");
+}
+
+function callSafetyContact() {
+  const phone = normalisePhone(state.settings.safetyPhone);
+  if (!phone) { toast("No number saved"); return; }
+  window.location.href = `tel:+${phone}`;
+}
+
+/* ---------------- reminders ---------------- */
+
+async function toggleReminders() {
+  const want = !state.settings.reminders;
+  if (want) {
+    if (!("Notification" in window)) {
+      toast("This browser has no notification support");
+      return;
+    }
+    let perm = Notification.permission;
+    if (perm === "default") {
+      try { perm = await Notification.requestPermission(); } catch (e) { perm = "denied"; }
+    }
+    if (perm !== "granted") {
+      state.settings.reminders = false;
+      saveState();
+      renderSettings();
+      showDialog({
+        title: "Notifications are blocked",
+        text: "Allow notifications for this site in your browser settings to get run reminders. On iPhone, add STRIDE to your Home Screen first — Safari only allows notifications for installed web apps.",
+        actions: [{ label: "Got it", style: "btn-primary" }]
+      });
+      return;
+    }
+    state.settings.reminders = true;
+    saveState();
+    renderSettings();
+    toast("Daily reminder set for " + state.settings.reminderTime);
+    showTestReminder();
+    return;
+  }
+  state.settings.reminders = false;
+  saveState();
+  renderSettings();
+  toast("Reminders off");
+}
+
+function reminderBody() {
+  const tw = todayWorkout();
+  if (tw && tw.workout && tw.workout.type !== "race") {
+    return `${tw.workout.title} · ${fmtDist1(tw.workout.km * 1000)} ${unitDef().label} is on the plan today.`;
+  }
+  const gap = effectiveWeeklyGoal().km - weeklyBuckets(1)[0].km;
+  if (gap > 0.3) return `${fmtDist1(gap * 1000)} ${unitDef().label} left to hit this week's goal.`;
+  return "A short easy run still counts. Lace up and go.";
+}
+
+async function showNotification(title, body) {
+  try {
+    if ("serviceWorker" in navigator) {
+      const reg = await navigator.serviceWorker.getRegistration();
+      if (reg && reg.showNotification) {
+        await reg.showNotification(title, {
+          body,
+          icon: "icons/icon-192.png",
+          badge: "icons/icon-192.png",
+          tag: "stride-reminder",
+          data: { url: "./" }
+        });
+        return true;
+      }
+    }
+    new Notification(title, { body, icon: "icons/icon-192.png" });
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+function showTestReminder() {
+  showNotification("STRIDE reminder is on", reminderBody());
+}
+
+/** called on open / on visibility change — no server needed for a daily nudge */
+function maybeRunReminder() {
+  const s = state.settings;
+  if (!s.reminders) return;
+  if (!("Notification" in window) || Notification.permission !== "granted") return;
+
+  const now = new Date();
+  const [hh, mm] = String(s.reminderTime || "07:00").split(":").map(Number);
+  const due = new Date();
+  due.setHours(hh || 7, mm || 0, 0, 0);
+  if (now < due) return;
+
+  const key = "stride.reminded." + isoDay(now);
+  if (store.get(key)) return;
+
+  const ranToday = realRuns().some(r => isSameDay(r.date, now));
+  if (ranToday) { store.set(key, "ran"); return; }
+
+  store.set(key, "sent");
+  const missed = missedSessions(state.plan);
+  const body = missed.length
+    ? `${missed.length} session${missed.length === 1 ? "" : "s"} slipped this plan — shift it forward and keep going.`
+    : reminderBody();
+  showNotification("Time for your run", body);
+}
+
+/* ---------------- demo data controls ---------------- */
+
+function purgeDemoRuns() {
+  const n = state.runs.filter(r => r.demo).length;
+  if (!n) { toast("No demo runs to remove"); return; }
+  showDialog({
+    title: `Remove ${n} demo run${n === 1 ? "" : "s"}?`,
+    text: "Demo runs are simulations. They are already excluded from your goals, streaks and personal bests — removing them just cleans up history.",
+    actions: [
+      { label: "Cancel", style: "btn-ghost" },
+      {
+        label: "Remove", style: "btn-danger", onClick: () => {
+          state.runs = state.runs.filter(r => !r.demo);
+          saveState();
+          renderAll();
+          toast("Demo runs removed");
+        }
+      }
+    ]
+  });
+}
+
+function purgeSampleRuns() {
+  const n = state.runs.filter(r => r.sample).length;
+  if (!n) { toast("No sample data loaded"); return; }
+  state.runs = state.runs.filter(r => !r.sample);
+  saveState();
+  renderAll();
+  toast("Sample data removed");
+}
+
+/* ---------------- storage health ---------------- */
+
+function storageMeterHtml() {
+  const { bytes, limit, pct } = storageUsage();
+  const mb = (bytes / 1048576).toFixed(2);
+  const limitMb = (limit / 1048576).toFixed(0);
+  const level = pct > 0.85 ? "high" : pct > 0.6 ? "mid" : "low";
+  const colour = level === "high" ? "#FF8087" : level === "mid" ? "#FF8A4C" : "var(--volt)";
+  return `
+    <div class="storage-meter">
+      <div class="row-between" style="margin-bottom:7px">
+        <span class="chart-sub">Storage used</span>
+        <span class="chart-sub num" style="color:${colour};font-weight:700">${mb} / ${limitMb} MB</span>
+      </div>
+      <div class="progress-bar" style="margin:0"><div class="progress-fill" style="width:${Math.max(2, pct * 100)}%;background:${colour}"></div></div>
+      ${pct > 0.75 ? `<div class="chart-sub" style="margin-top:8px;color:#FF8A4C">Storage is filling up — export a GPX backup and remove old runs so nothing gets lost.</div>` : ""}
+    </div>`;
+}
+
+
+/* ---------------- theme-aware chart colours ---------------- */
+
+function chartPalette() {
+  const light = document.documentElement.dataset.theme === "light";
+  if (light) {
+    return {
+      grid: "rgba(15,23,42,0.10)",
+      gridSoft: "rgba(15,23,42,0.07)",
+      value: "rgba(51,65,85,0.95)",
+      label: "rgba(100,116,139,0.95)",
+      labelLast: "#3F6212",
+      barOther: ["rgba(15,23,42,0.26)", "rgba(15,23,42,0.05)"],
+      barPeak: ["rgba(101,163,13,0.55)", "rgba(101,163,13,0.08)"],
+      barLast: ["#84CC16", "rgba(132,204,22,0.25)"],
+      line: "#4D7C0F",
+      lineSoft: "rgba(77,124,15,0.18)",
+      dotFill: "#FFFFFF",
+      dotStroke: "#4D7C0F",
+      placeholder: "rgba(100,116,139,0.85)",
+      voltText: "#3F6212"
+    };
+  }
+  return {
+    grid: "rgba(255,255,255,0.09)",
+    gridSoft: "rgba(255,255,255,0.07)",
+    value: "rgba(195,207,222,0.82)",
+    label: "rgba(132,147,166,0.85)",
+    labelLast: "#C9FF44",
+    barOther: ["rgba(255,255,255,0.34)", "rgba(255,255,255,0.07)"],
+    barPeak: ["rgba(201,255,68,0.75)", "rgba(201,255,68,0.14)"],
+    barLast: ["#D9FF74", "rgba(201,255,68,0.35)"],
+    line: "#C9FF44",
+    lineSoft: "rgba(201,255,68,0.22)",
+    dotFill: "#0C131C",
+    dotStroke: "#C9FF44",
+    placeholder: "rgba(132,147,166,0.55)",
+    voltText: "rgba(201,255,68,0.9)"
+  };
+}
+
+
+/* ---------------- map tiles toggle ---------------- */
+
+function toggleMapTiles() {
+  _tilesEnabled = !_tilesEnabled;
+  state.settings.mapTiles = _tilesEnabled;
+  saveState();
+  renderSettings();
+  toast(_tilesEnabled ? "Street map on — needs internet" : "Street map off — offline grid only");
+  if (ui.tab === "run") renderRunTab();
+}
+
+function applyMapTileSetting() {
+  _tilesEnabled = state.settings.mapTiles !== false;
+}
+
+
+/* ===== js/05-app.js ===== */
 /* ============================================================
    STRIDE — 04 · APP
    tab routing, sheets, events, bootstrap
@@ -4322,6 +6191,27 @@ function createPlanFromDraft() {
   }
 }
 
+function shiftPlan() {
+  const plan = state.plan;
+  if (!plan) return;
+  const missed = missedSessions(plan);
+  showDialog({
+    title: "Shift the plan forward?",
+    text: `${missed.length} missed session${missed.length === 1 ? "" : "s"} will move with the plan — your race date moves out by one week and today becomes the start of the next week. Nothing is deleted.`,
+    actions: [
+      { label: "Cancel", style: "btn-ghost" },
+      {
+        label: "Shift 1 week", style: "btn-primary",
+        onClick: () => {
+          shiftPlanWeeks(plan, 1);
+          renderAll();
+          toast("Plan shifted — pick up from this week");
+        }
+      }
+    ]
+  });
+}
+
 function deletePlan() {
   showDialog({
     title: "End this training plan?",
@@ -4381,7 +6271,8 @@ function handleAction(act, el) {
     case "start-workout": {
       const w = findWorkout(el.dataset.week, el.dataset.day);
       if (!w) return;
-      beginSession("gps", { km: w.km, title: w.title });
+      const steps = buildWorkoutSteps(w.type, w.km);
+      beginSession("gps", { km: w.km, title: w.title, type: w.type, steps });
       break;
     }
     case "toggle-workout":
@@ -4435,6 +6326,72 @@ function handleAction(act, el) {
       break;
     case "install-app":
       installApp();
+      break;
+    case "bg-note-close": {
+      const note = $("#bgNote");
+      if (note) note.classList.add("hidden");
+      store.set("stride.bgack", "1");
+      break;
+    }
+    case "open-manual":
+      openManualEntry();
+      break;
+    case "save-manual":
+      saveManualRun();
+      break;
+    case "open-share":
+      openShareSheet(id);
+      break;
+    case "share-image":
+      shareRunImage(id);
+      break;
+    case "share-gpx":
+      exportGpx(id);
+      break;
+    case "export-gpx":
+      exportGpx();
+      break;
+    case "open-safety":
+      openSafetySheet();
+      break;
+    case "safety-save":
+      saveSafetyContact();
+      break;
+    case "safety-call":
+      callSafetyContact();
+      break;
+    case "safety-send":
+      sendSafetyMessage(el.dataset.kind || "pin");
+      break;
+    case "toggle-theme":
+      toggleTheme();
+      break;
+    case "toggle-map":
+      toggleMapTiles();
+      break;
+    case "toggle-autopause":
+      state.settings.autoPause = !state.settings.autoPause;
+      saveState();
+      renderSettings();
+      toast(state.settings.autoPause ? "Auto-pause on" : "Auto-pause off");
+      break;
+    case "toggle-reminders":
+      toggleReminders();
+      break;
+    case "toggle-demo-view":
+      state.settings.showDemoRuns = !state.settings.showDemoRuns;
+      saveState();
+      renderAll();
+      if ($("#sheetSettings").classList.contains("open")) renderSettings();
+      break;
+    case "purge-demo":
+      purgeDemoRuns();
+      break;
+    case "purge-sample":
+      purgeSampleRuns();
+      break;
+    case "shift-plan":
+      shiftPlan();
       break;
     case "finish-onboarding":
       finishOnboarding();
@@ -4535,6 +6492,10 @@ document.addEventListener("input", e => {
     state.settings.name = e.target.value;
     saveState();
   }
+  if (e.target.id === "reminderTime") {
+    state.settings.reminderTime = e.target.value || "07:00";
+    saveState();
+  }
   if (e.target.id === "obName") {
     ob.name = e.target.value;
   }
@@ -4611,8 +6572,19 @@ window.addEventListener("beforeunload", e => {
 });
 
 document.addEventListener("visibilitychange", () => {
-  if (document.visibilityState === "hidden" && liveSession && !liveSession.finished) {
+  if (!liveSession || liveSession.finished) return;
+
+  if (document.visibilityState === "hidden") {
     liveSession.persist();
+    // browsers stop delivering GPS once the tab is hidden / screen locked.
+    // Say it plainly once instead of silently losing the route.
+    if (!liveSession.bgWarned && liveSession.mode === "gps") {
+      liveSession.bgWarned = true;
+      store.set("stride.bgwarned", "1");
+    }
+  } else {
+    liveSession.persist();
+    maybeRunReminder();
   }
 });
 
@@ -4620,6 +6592,8 @@ document.addEventListener("visibilitychange", () => {
 
 function init() {
   loadState();
+  applyTheme();
+  applyMapTileSetting();
   ui.planOpenWeek = null;
   renderAll();
   switchTab("run");
@@ -4640,6 +6614,7 @@ function init() {
     setTimeout(openOnboarding, 260);
   } else {
     setTimeout(checkUnfinishedRun, 500);
+    setTimeout(maybeRunReminder, 1500);
   }
 }
 
