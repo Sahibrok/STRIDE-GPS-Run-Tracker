@@ -1534,6 +1534,333 @@ svg { display: block; }
   .live-substats { margin-top: 8px; }
 }
 
+/* ---------- armed (not yet recording) state ---------- */
+.armed-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 10px 16px 0;
+  padding: 11px 13px;
+  border-radius: 14px;
+  background: rgba(201, 255, 68, 0.07);
+  border: 1px solid rgba(201, 255, 68, 0.22);
+}
+.armed-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--volt);
+  flex: 0 0 auto;
+  animation: armedPulse 1.6s ease-in-out infinite;
+}
+@keyframes armedPulse {
+  0%, 100% { opacity: 0.35; transform: scale(0.85); }
+  50% { opacity: 1; transform: scale(1.15); }
+}
+.armed-body { flex: 1 1 auto; min-width: 0; }
+.armed-title { font-size: 12.5px; font-weight: 800; letter-spacing: -0.01em; color: #EEF3FA; }
+.armed-sub { font-size: 10.5px; color: var(--muted); margin-top: 1px; line-height: 1.35; }
+.armed-btn {
+  flex: 0 0 auto;
+  height: 30px;
+  padding: 0 11px;
+  border-radius: 9px;
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background: var(--volt);
+  color: #0A1205;
+}
+.armed-btn:active { transform: scale(0.95); }
+
+.live-substat.dim { opacity: 0.42; }
+.ctrl.hidden { display: none; }
+.live-dot.recording { background: var(--volt); }
+
+/* ============================================================
+   SOCIAL LAYER — confetti, celebration, badges, milestones
+   ============================================================ */
+
+.confetti-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 95;
+  pointer-events: none;
+  display: none;
+}
+.confetti-layer:not([width="0"]) { display: block; }
+
+.milestone-toast {
+  position: fixed;
+  left: 50%;
+  top: calc(18% + var(--safe-t));
+  transform: translate(-50%, -14px) scale(0.94);
+  z-index: 92;
+  padding: 11px 20px;
+  border-radius: 14px;
+  background: linear-gradient(140deg, rgba(201,255,68,0.96), rgba(150,220,40,0.96));
+  color: #0A1205;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  box-shadow: 0 16px 40px rgba(201,255,68,0.35);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.3s cubic-bezier(0.22, 0.61, 0.36, 1);
+  white-space: nowrap;
+}
+.milestone-toast.show { opacity: 1; transform: translate(-50%, 0) scale(1); }
+
+.celebration {
+  position: fixed;
+  inset: 0;
+  z-index: 96;
+  display: grid;
+  place-items: center;
+  padding: 28px;
+  background: rgba(4, 7, 11, 0.78);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.celeb-inner {
+  width: 100%;
+  max-width: 330px;
+  text-align: center;
+  padding: 26px 22px 20px;
+  border-radius: 26px;
+  background: linear-gradient(180deg, #131C29 0%, #0B1119 100%);
+  border: 1px solid rgba(201, 255, 68, 0.28);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255,255,255,0.03) inset;
+  animation: celebPop 0.42s cubic-bezier(0.22, 1.2, 0.36, 1);
+}
+@keyframes celebPop {
+  from { opacity: 0; transform: scale(0.9) translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+.celeb-ring {
+  width: 74px; height: 74px;
+  margin: 0 auto 14px;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  background: radial-gradient(circle at 50% 30%, rgba(201,255,68,0.32), rgba(201,255,68,0.06));
+  border: 2px solid rgba(201, 255, 68, 0.5);
+  color: var(--volt);
+  box-shadow: 0 0 40px rgba(201, 255, 68, 0.28);
+}
+.celeb-ring svg { width: 34px; height: 34px; }
+.celeb-title { font-size: 21px; font-weight: 800; letter-spacing: -0.025em; color: #EEF3FA; }
+.celeb-sub { font-size: 13px; color: #8493A6; margin-top: 6px; line-height: 1.45; }
+
+/* ---------- badges ---------- */
+.badge-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 9px;
+}
+.badge-item {
+  padding: 12px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--line);
+  opacity: 0.55;
+}
+.badge-item.on { opacity: 1; background: linear-gradient(180deg, rgba(201,255,68,0.10), rgba(201,255,68,0.02)); border-color: rgba(201,255,68,0.28); }
+.badge-ico {
+  width: 30px; height: 30px;
+  border-radius: 9px;
+  display: grid; place-items: center;
+  background: rgba(255,255,255,0.05);
+  color: #66768A;
+  margin-bottom: 7px;
+}
+.badge-ico svg { width: 15px; height: 15px; }
+.badge-item.on .badge-ico { background: rgba(201,255,68,0.16); color: var(--volt); }
+.badge-item.tier-silver.on .badge-ico { background: rgba(99,200,255,0.16); color: var(--blue); }
+.badge-item.tier-gold.on .badge-ico { background: rgba(255,180,60,0.18); color: #FFB43C; }
+.badge-name { font-size: 12px; font-weight: 800; letter-spacing: -0.01em; color: var(--txt); }
+.badge-desc { font-size: 10.5px; color: var(--muted); margin-top: 2px; line-height: 1.35; }
+
+[data-theme="light"] .badge-item { background: #FFFFFF; }
+[data-theme="light"] .badge-item.on { background: linear-gradient(180deg, rgba(101,163,13,0.10), rgba(101,163,13,0.02)); border-color: rgba(101,163,13,0.3); }
+[data-theme="light"] .celeb-inner { background: #FFFFFF; border-color: rgba(101,163,13,0.3); }
+[data-theme="light"] .celeb-title { color: #0B1220; }
+[data-theme="light"] .celeb-sub { color: #64748B; }
+
+/* while waiting for the runner to move, a lone Finish button should not stretch */
+.live-controls:has(#ctrlPause.hidden) {
+  grid-template-columns: minmax(0, 240px);
+  justify-content: center;
+}
+
+/* ============================================================
+   PROFILE — name + photo at the very front
+   ============================================================ */
+
+/* the plan/today card used to sit flush against the stat tiles */
+.quick-grid + .card,
+.quick-grid + .section,
+.quick-grid + .today-card { margin-top: 14px; }
+.today-card + .section { margin-top: 18px; }
+
+.profile-hero {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 2px 0 16px;
+}
+.profile-id { flex: 1 1 auto; min-width: 0; }
+.profile-kicker {
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 700;
+}
+.profile-name {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  max-width: 100%;
+  margin: 1px 0 0;
+  padding: 0;
+  background: none;
+  border: 0;
+  text-align: left;
+  color: var(--txt);
+  font: inherit;
+}
+.profile-name-txt {
+  font-size: 25px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.profile-pencil {
+  display: grid;
+  place-items: center;
+  width: 22px; height: 22px;
+  flex: 0 0 auto;
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--muted);
+}
+.profile-pencil svg { width: 12px; height: 12px; }
+.profile-sub {
+  margin: 3px 0 0;
+  font-size: 12.5px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+/* ---------- avatar ---------- */
+.avatar {
+  position: relative;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  overflow: visible;              /* the camera badge hangs off the edge */
+  background: linear-gradient(160deg, rgba(201, 255, 68, 0.18), rgba(201, 255, 68, 0.04)), var(--card);
+  border: 1px solid rgba(201, 255, 68, 0.28);
+  color: var(--volt);
+  padding: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.avatar img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+}
+.avatar.has-photo,
+.avatar:has(img) { border-color: rgba(255, 255, 255, 0.16); }
+.avatar-ini {
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: var(--volt);
+}
+.avatar-glyph svg { width: 45%; height: 45%; }
+.avatar-glyph { display: grid; place-items: center; width: 100%; height: 100%; }
+
+.avatar-sm { width: 34px; height: 34px; font-size: 12px; border-radius: 50%; }
+.avatar-md { width: 52px; height: 52px; font-size: 17px; }
+.avatar-lg { width: 66px; height: 66px; font-size: 22px; }
+.avatar-xl { width: 96px; height: 96px; font-size: 30px; }
+
+.avatar-cam {
+  position: absolute;
+  right: -3px; bottom: -3px;
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  background: var(--volt);
+  color: #0A1205;
+  border: 2.5px solid var(--bg, #06090E);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
+}
+.avatar-cam svg { width: 12px; height: 12px; stroke-width: 2.2; }
+.avatar-sm .avatar-cam { width: 0; height: 0; display: none; }   /* header stays clean */
+
+/* ---------- profile sheet ---------- */
+.profile-edit-top {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 4px 0 18px;
+}
+.profile-edit-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  min-width: 0;
+}
+.profile-edit-actions .btn { width: auto; }
+.hint-sm { font-size: 11.5px; color: var(--muted); line-height: 1.4; }
+.profile-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 4px 0 18px;
+}
+.profile-stats > div {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 11px 13px;
+}
+.profile-stats b { display: block; font-size: 19px; font-weight: 800; letter-spacing: -0.02em; }
+.profile-stats span { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+
+/* ---------- onboarding identity row ---------- */
+.ob-identity { display: flex; align-items: center; gap: 12px; }
+.ob-identity .text-input { flex: 1 1 auto; min-width: 0; }
+.ob-photo-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 9px;
+  padding: 0;
+  background: none;
+  border: 0;
+  color: var(--volt);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.ob-photo-link svg { width: 13px; height: 13px; }
+
+/* light theme */
+[data-theme="light"] .avatar { background: #FFFFFF; border-color: rgba(101, 163, 13, 0.35); }
+[data-theme="light"] .avatar-ini { color: #4D7C0F; }
+[data-theme="light"] .avatar-cam { border-color: #F4F7FB; }
+[data-theme="light"] .profile-pencil { background: rgba(15, 23, 42, 0.06); }
+[data-theme="light"] .profile-stats > div { background: #FFFFFF; }
+
 </style>
 </head>
 <body>
@@ -1555,6 +1882,7 @@ svg { display: block; }
     </div>
     <div class="top-actions">
       <div class="chip-streak zero" id="streakChip"></div>
+      <button class="avatar avatar-sm" id="topAvatar" data-act="open-profile" aria-label="Your profile"></button>
       <button class="icon-btn" data-act="open-settings" aria-label="Settings">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
           <path d="M4 7.5h9"/><path d="M17.5 7.5H20"/><circle cx="15" cy="7.5" r="2.3"/>
@@ -1605,6 +1933,15 @@ svg { display: block; }
 
         <div class="live-target hidden" id="liveTarget"></div>
 
+        <div class="armed-card hidden" id="armedCard">
+          <div class="armed-dot"></div>
+          <div class="armed-body">
+            <div class="armed-title">Ready when you are</div>
+            <div class="armed-sub">Recording starts the moment you move.</div>
+          </div>
+          <button class="armed-btn hidden" data-act="force-start">Start anyway</button>
+        </div>
+
         <div class="map-wrap">
           <canvas id="liveMap"></canvas>
           <div class="return-chip hidden" id="returnChip">
@@ -1646,7 +1983,7 @@ svg { display: block; }
             <svg viewBox="0 0 24 24" fill="none"><rect x="6.8" y="4.8" width="3.8" height="14.4" rx="1.5" fill="currentColor"/><rect x="13.4" y="4.8" width="3.8" height="14.4" rx="1.5" fill="currentColor"/></svg>
             <span>Pause</span>
           </button>
-          <button class="ctrl ctrl-finish" data-act="finish-run">
+          <button class="ctrl ctrl-finish" id="ctrlFinish" data-act="finish-run">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 21V4"/><path d="M5.5 4.6h9.8l-1.7 3.4 1.7 3.4H5.5"/></svg>
             <span>Finish</span>
           </button>
@@ -1714,6 +2051,28 @@ svg { display: block; }
   <div class="sheet-body" id="sheetSafetyBody"></div>
 </div>
 
+<div class="sheet" id="sheetBadges" role="dialog" aria-modal="true" aria-label="Badges">
+  <div class="sheet-grab"><i></i></div>
+  <div class="sheet-body" id="sheetBadgesBody"></div>
+</div>
+
+<div class="sheet" id="sheetRecap" role="dialog" aria-modal="true" aria-label="Weekly recap">
+  <div class="sheet-grab"><i></i></div>
+  <div class="sheet-body" id="sheetRecapBody"></div>
+</div>
+
+<div class="sheet" id="sheetShared" role="dialog" aria-modal="true" aria-label="Shared run">
+  <div class="sheet-grab"><i></i></div>
+  <div class="sheet-body" id="sheetSharedBody"></div>
+</div>
+
+<div class="sheet" id="sheetProfile" role="dialog" aria-modal="true" aria-label="Your profile">
+  <div class="sheet-grab"><i></i></div>
+  <div class="sheet-body" id="sheetProfileBody"></div>
+</div>
+
+<input type="file" id="photoInput" accept="image/*" hidden>
+
 <div class="modal" id="modalDialog" role="dialog" aria-modal="true"></div>
 <div class="modal onboard-modal" id="modalOnboard" role="dialog" aria-modal="true" aria-label="Welcome to STRIDE"></div>
 
@@ -1729,6 +2088,9 @@ svg { display: block; }
 </div>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="milestone-toast" id="milestoneToast"></div>
+<canvas id="confetti" class="confetti-layer" aria-hidden="true"></canvas>
+<div class="celebration hidden" id="celebration" role="dialog" aria-modal="true"></div>
 
 <script>
 /* ===== js/01-core.js ===== */
@@ -1744,6 +2106,7 @@ const STORE_KEY = "stride.state.v1";
 
 const DEFAULT_SETTINGS = {
   name: "",
+  photo: null,          // data URL of the runner's photo (downscaled, ~20 KB)
   units: "km",          // 'km' | 'mi'
   voice: true,
   weightKg: 70,
@@ -2747,6 +3110,8 @@ const ICONS = {
   info: '<circle cx="12" cy="12" r="8.4"/><path d="M12 11v5.2"/><circle cx="12" cy="7.9" r="1" fill="currentColor" stroke="none"/>',
   download: '<path d="M12 4v10"/><path d="M8 11l4 4 4-4"/><path d="M4.6 19.4h14.8"/>',
   shoe: '<path d="M3.4 15.8v-3.1c1.6 0 2.8-.7 3.6-2.1l1.2-2.1 2.3 1.1c.5.2.7.5.6 1l-.2 1c1.5.2 2.9.8 4.2 1.8l2.6 2c1 .8.9 1.8.9 2.5H4.5a1.1 1.1 0 0 1-1.1-1.1Z"/><path d="M8.1 9.2l2 1"/>',
+  camera: '<path d="M4.4 8.6h2.7l1.3-2.1h6.2l1.3 2.1h2.7a1.6 1.6 0 0 1 1.6 1.6v7.2a1.6 1.6 0 0 1-1.6 1.6H4.4a1.6 1.6 0 0 1-1.6-1.6v-7.2a1.6 1.6 0 0 1 1.6-1.6Z"/><circle cx="12" cy="13.3" r="3.1"/>',
+  user: '<circle cx="12" cy="8.6" r="3.8"/><path d="M4.8 20.2c0-3.5 3.2-5.6 7.2-5.6s7.2 2.1 7.2 5.6"/>',
   wind: '<path d="M3.6 8.4h9.2a2.6 2.6 0 1 0-2.6-2.6"/><path d="M3.6 12.6h12.6a2.6 2.6 0 1 1-2.6 2.6"/><path d="M3.6 16.6h6.2"/>'
 };
 
@@ -3209,6 +3574,17 @@ class LiveSession {
     this.gpsAccuracy = null;
     this.gpsError = null;
     this.gpsReady = false;
+    this.armed = mode === "gps";
+    this.head = null;
+    this.anchor = null;
+    this.forced = false;               // user asked to start regardless of GPS
+    this.fixCount = 0;
+    this.armBuf = [];            // first fixes, averaged to beat GPS wander
+    this.movedFixes = 0;         // consecutive fixes that confirm real movement
+    this.armAnchor = null;       // fixed starting point while waiting for movement
+    this.armSigma = null;        // smoothed GPS noise estimate while arming
+    this.accPoint = null;        // last accepted (filtered) point
+    this._kf = null;             // constant-velocity Kalman filter state
     this.simulated = false;
     this.finished = false;
     this.startISO = new Date().toISOString();
@@ -3284,6 +3660,7 @@ class LiveSession {
     const speedBox = $("#speedSwitch");
     if (speedBox) speedBox.classList.toggle("hidden", this.mode !== "demo");
 
+    $("#armedCard")?.classList.add("hidden");
     if (this.mode === "demo") {
       const km = this.target ? clamp(this.target.km, 1, 12) : 5;
       this.track = makeDemoRoute(km * 1000, Math.random() * 10, 360);
@@ -3325,73 +3702,290 @@ class LiveSession {
     }
   }
 
+  /* ---------- GPS acquisition ----------
+     Real phones (especially indoors, or on the first fix after a cold start)
+     report ±60–150 m for a while. The old code simply refused to start, so the
+     app sat at "Locating…" forever. Now:
+
+       1. the very first fix is drawn on the map so you can see where you are,
+       2. recording starts as soon as the fix is good — or as soon as you have
+          actually moved, even on a mediocre fix,
+       3. a "Start anyway" button appears after 10 s so nothing blocks a run,
+       4. the GPS jitter threshold scales with the reported accuracy. */
+
+  startGate(acc) {
+    if (!acc) return "good";
+    if (acc <= 30) return "good";
+    if (acc <= 90) return "ok";
+    return "bad";
+  }
+
+  /** metres you must genuinely travel before an auto-start is believable */
+  startDistance(acc) {
+    const gate = this.startGate(acc);
+    if (gate === "good") return 12;
+    if (gate === "ok") return clamp((acc || 45) * 0.75, 22, 65);
+    return Infinity;              // ±100 m noise can never prove that you moved
+  }
+
+  /** accuracy-weighted average of a few fixes — kills GPS wander */
+  meanFix(list) {
+    if (!list || !list.length) return null;
+    let wsum = 0, lat = 0, lng = 0;
+    for (const f of list) {
+      const a = Math.max(f.acc || 15, 3);
+      const w = 1 / (a * a);
+      wsum += w; lat += f.lat * w; lng += f.lng * w;
+    }
+    return wsum ? { lat: lat / wsum, lng: lng / wsum } : null;
+  }
+
   onPosition(pos) {
     const { latitude, longitude, accuracy, altitude } = pos.coords;
-    this.gpsAccuracy = accuracy;
-    const accurate = !accuracy || accuracy <= 35;
+    const acc = typeof accuracy === "number" ? accuracy : null;
+    this.gpsAccuracy = acc;
+    this.fixCount = (this.fixCount || 0) + 1;
+
     const badge = $("#liveModeBadge");
+    const now = Date.now();
+    this.lastFixAt = now;
 
+    // ---------- not started yet ----------
     if (!this.gpsReady) {
-      if (accurate) {
-        this.gpsReady = true;
-        if (badge) { badge.className = "badge badge-gps"; badge.textContent = "GPS locked"; }
-        if ($("#liveStatusText")) $("#liveStatusText").textContent = "Recording";
-        beep(880, 0.09);
-        speak(this.target
-          ? `GPS locked. ${this.target.km} kilometers planned.`
-          : "GPS locked. Your run has started.");
-      } else if (badge) {
-        badge.className = "badge badge-gps warn";
-        badge.textContent = accuracy ? `Locating ±${Math.round(accuracy)} m` : "Locating…";
+      if (!this.firstFixAt) this.firstFixAt = now;
+      const fix = { lat: latitude, lng: longitude, t: pos.simTime || now, alt: altitude, acc };
+      this.head = fix;
+
+      // show the runner on the map immediately — orientation beats a blank grid
+      drawMap($("#liveMap"), [fix], { live: true, fix: this.head });
+
+      this.armBuf.push(fix);
+      if (this.armBuf.length > 12) this.armBuf.shift();
+
+      // anchor = average of the first fixes (fixed once, so it cannot drift with us),
+      // recent = average of the last fixes. Averaging stops a jittery ±60 m fix
+      // from looking like a 40 m sprint.
+      if (!this.armAnchor && this.armBuf.length >= 5) this.armAnchor = this.meanFix(this.armBuf.slice(0, 5));
+      const anchor = this.armAnchor || this.meanFix(this.armBuf);
+      const recent = this.meanFix(this.armBuf.slice(-Math.min(4, this.armBuf.length)));
+      this.anchor = anchor;
+
+      // how much do fixes at this accuracy actually wander? measure it, don't trust the number
+      let sigma = 0;
+      if (this.armBuf.length > 1) {
+        let sum = 0;
+        for (let i = 1; i < this.armBuf.length; i++) sum += haversine(this.armBuf[i - 1], this.armBuf[i]);
+        sigma = (sum / (this.armBuf.length - 1)) / Math.SQRT2;      // step noise → 1σ position noise
       }
-    } else if (badge) {
-      badge.className = "badge " + (accurate ? "badge-gps" : "badge-gps warn");
-      badge.textContent = `GPS ±${Math.round(accuracy || 0)} m`;
-    }
+      // smooth the noise estimate — a single noisy second should not flip the decision
+      this.armSigma = this.armSigma ? this.armSigma * 0.75 + sigma * 0.25 : sigma;
+      sigma = this.armSigma;
+      const n1 = Math.min(5, this.armBuf.length), n2 = Math.min(4, this.armBuf.length);
+      const se = sigma * Math.sqrt(1 / n1 + 1 / n2);
 
-    if (!this.gpsReady) return;
-    if (accuracy && accuracy > 45) return;
+      const moved = anchor && recent ? haversine(anchor, recent) : 0;
 
-    const p = {
-      lat: latitude,
-      lng: longitude,
-      t: pos.simTime || Date.now(),
-      alt: typeof altitude === "number" ? altitude : null,
-      acc: accuracy
-    };
+      // Auto-start only on evidence we can defend: a genuinely good fix AND
+      // a measured noise level to match. Otherwise the runner taps "Start anyway"
+      // — we never invent a run out of GPS wander.
+      // auto-start when the fix is decent and its noise matches what the phone claims
+      const noisy = (acc && acc > 30) || sigma > Math.max(12, (acc || 20) * 1.6);
+      const need = clamp(3 * se, 15, 60);
+      const settled = this.armBuf.length >= 8;         // ~8 s of fixes before deciding
+      const weak = noisy || this.startGate(acc) === "bad";
 
-    const last = this.points[this.points.length - 1];
+      if (settled && !noisy && moved >= need) this.movedFixes = (this.movedFixes || 0) + 1;
+      else this.movedFixes = 0;
 
-    // auto-paused: only wake up when the runner actually moves again
-    if (this.paused) {
-      if (this.pauseReason === "manual") return;
-      if (!last) { this.resume(true); }
-      else if (haversine(last, p) >= 10) {
-        this.resume(true);
-      } else {
+      const ready = settled && !noisy && moved >= need && this.movedFixes >= 2;
+
+      this.armDebug = { sigma: Math.round(sigma), se: Math.round(se), moved: Math.round(moved), need: Math.round(need), weak, settled, n: this.armBuf.length };
+      if ((ready || this.forced) && this.status !== "paused") {
+        const at = recent && !this.forced ? recent : fix;
+        this.beginRecording({ lat: at.lat, lng: at.lng, t: fix.t, alt: altitude, acc });
         return;
       }
+
+      if (badge) {
+        badge.className = "badge badge-gps warn";
+        badge.textContent = acc ? `GPS ±${Math.round(acc)} m` : "Locating…";
+      }
+      this.updateArmedUI(now - this.firstFixAt, acc, moved, need, weak);
+      return;
     }
 
-    if (last) {
-      const d = haversine(last, p);
-      const dt = Math.max((p.t - last.t) / 1000, 0.5);
-      if (d < 1.4) return;                          // jitter while standing still
-      if (d / dt > 12) {
-        // impossible speed: keep the fix as an anchor but do not connect or count it
+    // ---------- already recording ----------
+    if (badge) {
+      const good = !acc || acc <= 35;
+      badge.className = "badge " + (good ? "badge-gps" : "badge-gps warn");
+      badge.textContent = `GPS ±${Math.round(acc || 0)} m`;
+    }
+
+    // very poor fixes are used for the map only, never for distance
+    if (acc && acc > 60) {
+      this.head = { lat: latitude, lng: longitude, t: pos.simTime || now, alt: altitude, acc };
+      return;
+    }
+
+    // smooth the raw fix so a stationary phone does not "run" 500 m
+    const fused = this.fuseFix({ lat: latitude, lng: longitude, t: pos.simTime || now, acc });
+    const p = {
+      lat: fused.lat,
+      lng: fused.lng,
+      t: pos.simTime || now,
+      alt: typeof altitude === "number" ? altitude : null,
+      acc
+    };
+    this.head = p;
+
+    const lastAcc = this.accPoint || this.points[this.points.length - 1];
+
+    // auto-paused: wake up once the runner actually moves again
+    if (this.paused) {
+      if (this.pauseReason === "manual") return;
+      if (!lastAcc) this.resume(true);
+      else if (haversine(lastAcc, p) >= Math.max(12, (acc || 10) * 0.7)) this.resume(true);
+      else return;
+    }
+
+    if (lastAcc) {
+      const d = haversine(lastAcc, p);
+      const dt = Math.max((p.t - lastAcc.t) / 1000, 0.5);
+      const minStep = clamp((acc || 10) * 0.9, 6, 30);   // a step, not a wander
+
+      if (d < minStep) return;                       // wander, not a step
+      if (d / dt > 9) {                              // impossible speed → break the line
         p.g = true;
-      } else if (!p.g) {
-        this.lastMoveT = Date.now();
-        this.lastFixT = Date.now();
+        this.addPoint(p);
+        this.accPoint = p;
+        return;
       }
+      p.moved = d;
+      this.accPoint = p;
+      // only count this as movement if the filter says we are actually moving —
+      // otherwise GPS wander keeps auto-pause from ever firing
+      if (this.filterSpeed() >= 0.55) this.lastMoveT = now;
+      this.lastFixT = now;
     } else {
-      this.lastMoveT = Date.now();
-      this.lastFixT = Date.now();
+      this.accPoint = p;
+      this.lastMoveT = now;
+      this.lastFixT = now;
       this.splitStartT = p.t;
+      if (this.points.length === 0) this.points = [p];
     }
 
     this.addPoint(p);
     this.tick();
+  }
+
+  /** constant-velocity Kalman filter — smooths GPS wander without lagging real movement */
+  fuseFix(raw) {
+    const acc = Math.max(raw.acc || 10, 5);
+    if (!this._kf) {
+      this._kf = {
+        lat0: raw.lat, lng0: raw.lng, t: raw.t,
+        x: { p: 0, v: 0, P00: 100, P01: 0, P11: 4 },
+        y: { p: 0, v: 0, P00: 100, P01: 0, P11: 4 }
+      };
+    }
+    const K = this._kf;
+    const mPerLng = 111320 * Math.cos(K.lat0 * Math.PI / 180);
+    const dt = clamp((raw.t - K.t) / 1000, 0.2, 10);
+    K.t = raw.t;
+    const sig = acc * 0.8;
+    this.kfStep(K.x, (raw.lng - K.lng0) * mPerLng, dt, sig);
+    this.kfStep(K.y, (raw.lat - K.lat0) * 111320, dt, sig);
+    return { lat: K.lat0 + K.y.p / 111320, lng: K.lng0 + K.x.p / mPerLng };
+  }
+
+  /** current smoothed speed in m/s (0 when the filter is cold) */
+  filterSpeed() {
+    if (!this._kf) return 0;
+    return Math.hypot(this._kf.x.v, this._kf.y.v);
+  }
+
+  kfStep(s, z, dt, sig) {
+    const R = Math.max(sig * sig, 16), q = 0.03;
+    s.p += s.v * dt;
+    s.P00 += 2 * dt * s.P01 + dt * dt * s.P11 + q * dt;
+    s.P01 += dt * s.P11;
+    s.P11 += q * dt;
+    const S = s.P00 + R, K0 = s.P00 / S, K1 = s.P01 / S, y = z - s.p;
+    s.p += K0 * y; s.v += K1 * y;
+    const n00 = s.P00 - K0 * s.P00, n01 = s.P01 - K0 * s.P01, n11 = s.P11 - K1 * s.P01;
+    s.P00 = n00; s.P01 = n01; s.P11 = n11;
+  }
+
+  /** flip from "armed" to actually recording */
+  beginRecording(head) {
+    this.gpsReady = true;
+    this.armed = false;
+    const p = {
+      lat: head.lat, lng: head.lng, t: head.t,
+      alt: typeof head.alt === "number" ? head.alt : null,
+      acc: head.acc
+    };
+    this.points = [p];
+    this.distM = 0;
+    this.accPoint = p;
+    this._kf = null;
+    this.armBuf = [];
+    this.movedFixes = 0;
+    this.armAnchor = null;
+    this.armSigma = null;
+    this.splitStartT = p.t;
+    this.lastMoveT = Date.now();
+    this.lastFixT = Date.now();
+
+    const badge = $("#liveModeBadge");
+    if (badge) { badge.className = "badge badge-gps"; badge.textContent = "GPS locked"; }
+    $("#armedCard")?.classList.add("hidden");
+    $("#liveDot")?.classList.add("recording");
+    const st = $("#liveStatusText");
+    if (st) st.textContent = "Recording";
+
+    beep(920, 0.1);
+    setTimeout(() => beep(1240, 0.12), 120);
+    speak(this.target
+      ? `Recording started. ${this.target.km} kilometers planned.`
+      : "Recording started. Have a good run.");
+    this.tick();
+  }
+
+  /** visible "waiting / ready" card so a stationary phone never looks like a run */
+  updateArmedUI(waited, acc, moved, need, weak) {
+    const card = $("#armedCard");
+    if (!card) return;
+    card.classList.remove("hidden");
+
+    const title = card.querySelector(".armed-title");
+    const sub = card.querySelector(".armed-sub");
+    const btn = card.querySelector("[data-act='force-start']");
+    if (!title || !sub) return;
+
+    const n = Math.round(moved || 0);
+    const goal = Math.round(need || 0);
+
+    if (weak) {
+      title.textContent = "Your call — start anyway";
+      sub.textContent = "GPS is at ±" + Math.round(acc || 0) + " m, so we won't guess. Tap start and the timer runs; your line and distance firm up as the fix improves.";
+    } else if (n >= Math.max(10, goal * 0.75)) {
+      title.textContent = "Keep going — almost live";
+      sub.textContent = n + " m of " + goal + " m. Recording begins by itself once you pass that.";
+    } else {
+      title.textContent = "Ready when you are";
+      sub.textContent = "Start walking — the timer begins on its own after a few steps. It never runs while you stand still.";
+    }
+
+    if (btn) btn.classList.remove("hidden");   // never leave the runner with no way to start
+  }
+
+  /** user tapped "Start anyway" */
+  forceStart() {
+    this.forced = true;
+    const head = this.head;
+    if (head) this.beginRecording({ ...head, t: head.t || Date.now() });
+    else toast("No fix yet — we start the second one arrives");
   }
 
   /** incremental accumulation — avoids re-walking 10k points four times a second */
@@ -3566,13 +4160,35 @@ class LiveSession {
     if (this.finished) return;
 
     // auto-pause when the runner has not moved for a while
-    if (state.settings.autoPause && !this.paused && this.mode !== "demo" &&
-        this.distM > 60 && this.lastMoveT && Date.now() - this.lastMoveT > 12000) {
+    if (state.settings.autoPause && !this.paused && !this.armed && this.mode !== "demo" &&
+        this.lastMoveT && Date.now() - this.lastMoveT > 12000 &&
+        (this.distM > 60 || this.filterSpeed() < 0.55)) {
       this.pause(true);
     }
 
     const s = this.stats();
     const label = unitDef().label;
+
+    // armed (no recording yet): keep the panel calm and honest
+    const armedNow = this.mode === "gps" && !this.gpsReady;
+    $("#liveTime").parentElement.classList.toggle("dim", armedNow);
+    $("#livePace").parentElement.classList.toggle("dim", armedNow);
+    if (armedNow) {
+      $("#liveStatusText").textContent = "Not started";
+      $("#ctrlPause").classList.add("hidden");
+      $("#ctrlFinish").classList.remove("hidden");
+      // keep the runner on the map instead of the "Waiting for GPS…" placeholder
+      if (this.head) drawMap($("#liveMap"), [this.head], { live: true, fix: this.head });
+      $("#bgNote")?.classList.add("hidden");
+      $("#lastSplit")?.classList.add("hidden");
+    } else {
+      if (this.mode === "gps") {
+        const note = $("#bgNote");
+        if (note) note.classList.toggle("hidden", !!store.get("stride.bgack"));
+      }
+      $("#lastSplit")?.classList.remove("hidden");
+      $("#ctrlPause").classList.remove("hidden");
+    }
 
     $("#liveDist").textContent = fmtDist(s.distM, 2);
     $("#liveTime").textContent = fmtTime(s.duration);
@@ -3587,7 +4203,9 @@ class LiveSession {
       live.textContent = `${fmtDist(s.distM, 2)} ${label}, ${fmtTime(s.duration)}, pace ${fmtPace(s.pace)} per ${label}`;
     }
 
-    drawMap($("#liveMap"), s.points, { live: !this.paused });
+    // while armed, show the live position instead of an empty "waiting" map
+    if (armedNow && this.head) drawMap($("#liveMap"), [this.head], { live: true, fix: this.head });
+    else drawMap($("#liveMap"), s.points, { live: !this.paused });
     this.updateReturnToStart(s.points);
 
     if (this.target) {
@@ -3606,14 +4224,18 @@ class LiveSession {
     } else {
       const nextKm = (s.splits.length + 1) * unitDef().m;
       const toSplit = nextKm - s.distM;
-      $("#nextCue").textContent = !this.gpsReady && this.mode === "gps"
-        ? "Waiting for GPS — timer starts when you do"
+      const armedNow2 = !this.gpsReady && this.mode === "gps";
+      $("#nextCue").textContent = armedNow2
+        ? (this.gpsAccuracy && this.gpsAccuracy > 30
+            ? "Tap start when you're ready — or wait for a better fix"
+            : "Start walking — recording begins by itself")
         : s.distM < 15
-          ? "Start moving to begin tracking"
+          ? "Tracking — distance starts with your first steps"
           : `Next ${label} split in ${Math.max(0, Math.round(toSplit))} m`;
     }
 
     this.updateWorkoutStep(s);
+    if (!this.paused && s.distM > 100) checkLiveMilestone(this, s);
 
     if (s.lastSplit && s.lastSplit.index > this.lastSplitIndex) {
       this.lastSplitIndex = s.lastSplit.index;
@@ -3836,6 +4458,19 @@ function finishSession() {
   const s = liveSession.stats();
   const label = unitDef().label;
 
+  if (!liveSession.gpsReady && liveSession.mode === "gps") {
+    showDialog({
+      title: "Cancel this run?",
+      text: "Recording hasn't started yet — no GPS movement was detected, so there is nothing to save.",
+      actions: [
+        { label: "Keep waiting", style: "btn-ghost" },
+        { label: "Yes, cancel", style: "btn-danger", onClick: () => {
+            liveSession.discard(); liveSession = null; closeLiveScreen();
+        } }
+      ]
+    });
+    return;
+  }
   if (s.distM < 30 || s.duration < 10) {
     showDialog({
       title: "This run is very short",
@@ -3878,6 +4513,10 @@ function doFinish() {
     renderPlan();
     renderRunTab();
     openRunSummary(result.run.id);
+    // the payoff moment: badge or personal best, a beat after the summary lands
+    if (typeof celebrateRun === "function") {
+      setTimeout(() => { try { celebrateRun(result.run, result.autoDone); } catch (e) {} }, 900);
+    }
   }
 }
 
@@ -4099,14 +4738,27 @@ function renderRunTab() {
       ${recent.map(runItemMarkup).join("")}
     </div>` : "";
 
+  const fullName = (state.settings.name || "").trim();
+  const hasPhoto = !!state.settings.photo;
+  const weekLine = weekKm > 0
+    ? `${fmtDist1(weekKm * 1000)} ${u} covered this week · ${week.runs} run${week.runs === 1 ? "" : "s"}`
+    : "A clear route, a steady pace, and one goal. Let's move.";
+
   $("#runIdle").innerHTML = `
-    <div class="screen-head">
-      <h1 class="screen-title">${greeting()}${name ? `, ${escapeHtml(name)}` : ""}</h1>
-      <p class="screen-sub">${
-        weekKm > 0
-          ? `${fmtDist1(weekKm * 1000)} ${u} covered this week · ${week.runs} run${week.runs === 1 ? "" : "s"}`
-          : "A clear route, a steady pace, and one goal. Let's move."
-      }</p>
+    <div class="profile-hero">
+      <button class="avatar avatar-lg" data-avatar="camera" data-act="open-profile"
+              aria-label="${hasPhoto ? "Change your photo" : "Upload a photo"}">
+        ${avatarFaceHTML()}
+        <span class="avatar-cam">${icon("camera")}</span>
+      </button>
+      <div class="profile-id">
+        <div class="profile-kicker">${greeting()}</div>
+        <button class="profile-name" data-act="open-profile">
+          <span class="profile-name-txt"${fullName ? "" : ' style="color:var(--muted)"'}>${fullName ? escapeHtml(fullName) : "Add your name"}</span>
+          <span class="profile-pencil">${icon("settings")}</span>
+        </button>
+        <p class="profile-sub">${weekLine}</p>
+      </div>
     </div>
 
     <div class="card hero-card">
@@ -4487,6 +5139,30 @@ function renderStats() {
         </div>
         <div class="chart-box"><canvas id="chartPace"></canvas></div>
       </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head">
+        <h2 class="section-title">This week</h2>
+        <button class="link-btn" data-act="open-recap">Recap card ${icon("chev")}</button>
+      </div>
+      <div class="card" style="padding:15px 16px">
+        <div class="row-between">
+          <div>
+            <div style="font-size:26px;font-weight:800;letter-spacing:-0.03em" class="num">${weekDisp.toFixed(1)} <span style="font-size:12px;color:var(--muted)">${u}</span></div>
+            <div class="chart-sub">${week.runs} run${week.runs === 1 ? "" : "s"} · ${weekStreak()}-week streak</div>
+          </div>
+          <button class="btn btn-ghost btn-sm" style="width:auto;padding:0 14px" data-act="open-recap">${icon("download")} Share</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head">
+        <h2 class="section-title">Badges</h2>
+        <button class="link-btn" data-act="open-badges">All ${icon("chev")}</button>
+      </div>
+      ${badgeListMarkup(true)}
     </div>
 
     <div class="section">
@@ -5115,10 +5791,10 @@ function renderSettings() {
 
 /* ---------------- onboarding ---------------- */
 
-let ob = { units: "km", goalIdx: 1, name: "" };
+let ob = { units: "km", goalIdx: 1, name: "", photo: null };
 
 function openOnboarding() {
-  ob = { units: state.settings.units, goalIdx: 1, name: state.settings.name || "" };
+  ob = { units: state.settings.units, goalIdx: 1, name: state.settings.name || "", photo: state.settings.photo || null };
   renderOnboarding();
   $("#overlay").classList.add("show");
   $("#modalOnboard").classList.add("open");
@@ -5171,7 +5847,17 @@ function renderOnboarding() {
 
     <div class="field">
       <span class="field-label">What should we call you?</span>
-      <input class="text-input" id="obName" placeholder="Your name" value="${escapeHtml(ob.name)}" maxlength="24" autocomplete="off">
+      <div class="ob-identity">
+        <button class="avatar avatar-md" data-avatar="camera" data-act="profile-photo"
+                aria-label="Add a photo">
+          ${avatarFaceHTML(ob.photo, ob.name)}
+          <span class="avatar-cam">${icon("camera")}</span>
+        </button>
+        <input class="text-input" id="obName" placeholder="Your name" value="${escapeHtml(ob.name)}" maxlength="24" autocomplete="off">
+      </div>
+      <button class="ob-photo-link" data-act="profile-photo">
+        ${icon("camera")} ${ob.photo ? "Change photo" : "Add a photo (optional)"}
+      </button>
     </div>
 
     <div class="field">
@@ -5626,15 +6312,71 @@ function drawShareCard(canvas, run) {
   ctx.fillStyle = "rgba(238,243,250,0.6)";
   ctx.font = "600 28px Inter, system-ui, sans-serif";
   ctx.fillText(fmtDateFull(run.date), W / 2, 1160);
-  if (state.settings.name) {
+  if (state.settings.name || state.settings.photo) {
+    const nm = state.settings.name || "Runner";
+    ctx.font = "800 30px Inter, system-ui, sans-serif";
+    const nameW = ctx.measureText(nm).width;
+    const avR = 26, gap = 12;
+    const totalW = avR * 2 + gap + nameW;
+    const startX = W / 2 - totalW / 2;
+    ctx.save();
+    drawAvatarCircle(ctx, startX + avR, 1204, avR, { ringWidth: 3 });
     ctx.fillStyle = "#C9FF44";
     ctx.font = "800 30px Inter, system-ui, sans-serif";
-    ctx.fillText(state.settings.name, W / 2, 1214);
+    ctx.textAlign = "left";
+    ctx.fillText(nm, startX + avR * 2 + gap, 1214);
+    ctx.restore();
+    ctx.textAlign = "center";
   }
   ctx.fillStyle = "rgba(132,147,166,0.55)";
   ctx.font = "600 22px Inter, system-ui, sans-serif";
   ctx.fillText("made with STRIDE", W / 2, 1280);
   ctx.textAlign = "left";
+}
+
+/** draw the profile photo / initials into a canvas circle — share cards use this */
+let _photoCache = { src: null, img: null };
+function photoImage() {
+  const src = state.settings.photo;
+  if (!src) return null;
+  if (_photoCache.src === src && _photoCache.img && _photoCache.img.complete) return _photoCache.img;
+  const img = new Image();
+  img.src = src;
+  _photoCache = { src, img };
+  return img.complete ? img : null;
+}
+
+function drawAvatarCircle(ctx, cx, cy, r, opts = {}) {
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  ctx.closePath();
+  ctx.clip();
+  const img = photoImage();
+  if (img && img.naturalWidth) {
+    const side = Math.min(img.naturalWidth, img.naturalHeight);
+    const sx = (img.naturalWidth - side) / 2;
+    const sy = (img.naturalHeight - side) / 2;
+    ctx.drawImage(img, sx, sy, side, side, cx - r, cy - r, r * 2, r * 2);
+  } else {
+    ctx.fillStyle = opts.fallbackBg || "rgba(201,255,68,0.14)";
+    ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
+    const ini = initialsOf(state.settings.name);
+    if (ini) {
+      ctx.fillStyle = opts.fallbackColor || "#C9FF44";
+      ctx.font = `800 ${Math.round(r * 0.86)}px Inter, system-ui, sans-serif`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(ini, cx, cy + r * 0.04);
+      ctx.textBaseline = "alphabetic";
+    }
+  }
+  ctx.restore();
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  ctx.lineWidth = opts.ringWidth || 4;
+  ctx.strokeStyle = opts.ring || "rgba(201,255,68,0.42)";
+  ctx.stroke();
 }
 
 function roundRect(ctx, x, y, w, h, r) {
@@ -6069,7 +6811,923 @@ function applyMapTileSetting() {
 }
 
 
-/* ===== js/05-app.js ===== */
+/* ---------------- profile: name + photo ----------------
+   The runner's identity sits at the very top of the home screen and on every
+   share card. Photos are cropped square, downscaled to 384 px and stored as a
+   JPEG data URL (~20–30 KB) inside the same local state as everything else —
+   nothing ever leaves the device. */
+
+function initialsOf(name) {
+  const parts = String(name || "").trim().split(/\s+/).filter(Boolean);
+  if (!parts.length) return "";
+  return (parts[0][0] + (parts[1] ? parts[1][0] : "")).toUpperCase();
+}
+
+/** the inside of an avatar: photo, initials, or a neutral person glyph */
+function avatarFaceHTML(photo, name) {
+  const p = photo === undefined ? state.settings.photo : photo;
+  const n = name === undefined ? state.settings.name : name;
+  if (p) return `<img src="${p}" alt="">`;
+  const ini = initialsOf(n);
+  return ini
+    ? `<span class="avatar-ini">${escapeHtml(ini)}</span>`
+    : `<span class="avatar-glyph">${icon("user")}</span>`;
+}
+
+function refreshAvatarNodes() {
+  document.querySelectorAll("[data-avatar]").forEach(el => {
+    el.innerHTML = avatarFaceHTML() +
+      (el.dataset.avatar === "camera"
+        ? `<span class="avatar-cam">${icon("camera")}</span>`
+        : "");
+  });
+  const top = $("#topAvatar");
+  if (top) {
+    top.innerHTML = avatarFaceHTML();
+    top.classList.toggle("has-photo", !!state.settings.photo);
+    top.setAttribute("aria-label",
+      state.settings.name ? `${state.settings.name} — open profile` : "Open your profile");
+  }
+}
+
+function pickPhoto() {
+  const input = $("#photoInput");
+  if (!input) return;
+  input.value = "";           // so picking the same file twice still fires
+  input.click();
+}
+
+/** square-crop + downscale a picked file into a small JPEG data URL */
+function resizePhoto(file, maxPx = 384, quality = 0.86) {
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      try {
+        const side = Math.min(img.naturalWidth || img.width, img.naturalHeight || img.height);
+        if (!side) throw new Error("empty");
+        const sx = ((img.naturalWidth || img.width) - side) / 2;
+        const sy = ((img.naturalHeight || img.height) - side) / 2;
+        const out = Math.max(64, Math.min(maxPx, side));
+        const c = document.createElement("canvas");
+        c.width = c.height = out;
+        const ctx = c.getContext("2d");
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = "high";
+        ctx.drawImage(img, sx, sy, side, side, 0, 0, out, out);
+        URL.revokeObjectURL(url);
+        resolve(c.toDataURL("image/jpeg", quality));
+      } catch (err) {
+        URL.revokeObjectURL(url);
+        reject(err);
+      }
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error("decode")); };
+    img.src = url;
+  });
+}
+
+async function handlePhotoFile(file) {
+  if (!file) return;
+  if (file.type && !/^image\//.test(file.type)) {
+    toast("That file is not an image");
+    return;
+  }
+  try {
+    const data = await resizePhoto(file);
+    if (data.length > 400 * 1024) {          // keep localStorage healthy
+      const smaller = await resizePhoto(file, 256, 0.78);
+      if (smaller.length >= data.length) { toast("Photo too large — try a smaller one"); return; }
+      state.settings.photo = smaller;
+    } else {
+      state.settings.photo = data;
+    }
+    // onboarding has its own draft copy
+    if ($("#modalOnboard") && $("#modalOnboard").classList.contains("open")) {
+      ob.photo = state.settings.photo;
+      renderOnboarding();
+    } else {
+      saveState();
+      refreshAvatarNodes();
+      if ($("#sheetProfile") && !$("#sheetProfile").classList.contains("hidden")) renderProfileSheet();
+      renderRunTab();
+    }
+    toast("Photo updated");
+  } catch (e) {
+    toast("Could not read that photo — a JPG or PNG works best");
+  }
+}
+
+function removePhoto() {
+  state.settings.photo = null;
+  if ($("#modalOnboard") && $("#modalOnboard").classList.contains("open")) {
+    ob.photo = null;
+    renderOnboarding();
+    return;
+  }
+  saveState();
+  refreshAvatarNodes();
+  renderProfileSheet();
+  renderRunTab();
+  toast("Photo removed");
+}
+
+function profileLifetime() {
+  const runs = realRuns();
+  const km = runs.reduce((a, r) => a + r.distM, 0) / 1000;
+  return { runs: runs.length, km };
+}
+
+function renderProfileSheet() {
+  const st = state.settings;
+  const life = profileLifetime();
+  const u = unitDef();
+  const dist = u.label === "mi" ? life.km / 1.609344 : life.km;
+  $("#sheetProfileBody").innerHTML = `
+    <div class="sheet-head">
+      <div>
+        <div class="sheet-title">Your profile</div>
+        <div class="sheet-sub">Your name and photo appear on the home screen and on every share card.</div>
+      </div>
+      <button class="sheet-close" data-act="close-sheet">${icon("x")}</button>
+    </div>
+
+    <div class="profile-edit-top">
+      <button class="avatar avatar-xl" data-avatar="camera" data-act="profile-photo"
+              aria-label="${st.photo ? "Change photo" : "Upload a photo"}">
+        ${avatarFaceHTML()}
+        <span class="avatar-cam">${icon("camera")}</span>
+      </button>
+      <div class="profile-edit-actions">
+        <button class="btn btn-primary btn-sm" data-act="profile-photo">
+          ${icon("camera")} ${st.photo ? "Change photo" : "Upload photo"}
+        </button>
+        ${st.photo
+          ? `<button class="btn btn-ghost btn-sm" data-act="profile-photo-remove">${icon("trash")} Remove photo</button>`
+          : `<span class="hint-sm">Optional. A photo makes your recap card personal.</span>`}
+      </div>
+    </div>
+
+    <div class="field">
+      <span class="field-label">Your name</span>
+      <input class="text-input" id="profileName" placeholder="e.g. Aarav Sharma"
+             value="${escapeHtml(st.name)}" maxlength="24" autocomplete="off">
+    </div>
+
+    <div class="profile-stats">
+      <div><b>${fmtDist1(life.km * 1000)}</b><span>${u.label} lifetime</span></div>
+      <div><b>${life.runs}</b><span>${life.runs === 1 ? "run" : "runs"}</span></div>
+    </div>
+
+    <button class="btn btn-primary" data-act="save-profile">Save profile</button>
+    <p class="footer-note">Stored only in this browser — nothing is uploaded anywhere.</p>
+  `;
+}
+
+function openProfileSheet() {
+  renderProfileSheet();
+  openSheet("#sheetProfile");
+}
+
+function saveProfile() {
+  const input = $("#profileName");
+  if (input) state.settings.name = input.value.trim().slice(0, 24);
+  saveState();
+  closeSheets();
+  refreshAvatarNodes();
+  renderRunTab();
+  if (typeof renderStats === "function") renderStats();
+  haptic(10);
+  toast(state.settings.name ? `Saved — looking good, ${firstName() || "runner"}` : "Profile saved");
+}
+
+
+/* ===== js/05-social.js ===== */
+/* ============================================================
+   STRIDE — 05 · SOCIAL
+   The parts that make people come back and send it to a friend:
+   milestones, confetti, achievements, shareable run links and a
+   weekly recap card. No backend — runs travel inside the URL.
+   ============================================================ */
+
+"use strict";
+
+/* ---------------- confetti ---------------- */
+
+let _confettiRaf = null;
+
+function celebrateConfetti(duration = 2000) {
+  const canvas = $("#confetti");
+  if (!canvas) return;
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  canvas.width = window.innerWidth * dpr;
+  canvas.height = window.innerHeight * dpr;
+  canvas.style.width = "100%";
+  canvas.style.height = "100%";
+  const ctx = canvas.getContext("2d");
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  const W = window.innerWidth, H = window.innerHeight;
+  const colours = ["#C9FF44", "#FFFFFF", "#63C8FF", "#FF8A4C", "#FF6B9A"];
+  const parts = [];
+  const start = performance.now();
+
+  for (let i = 0; i < 110; i++) {
+    parts.push({
+      x: W / 2 + (Math.random() - 0.5) * W * 0.6,
+      y: H * 0.42 + (Math.random() - 0.5) * 60,
+      vx: (Math.random() - 0.5) * 9,
+      vy: -6 - Math.random() * 9,
+      size: 3 + Math.random() * 5,
+      rot: Math.random() * Math.PI,
+      vr: (Math.random() - 0.5) * 0.3,
+      colour: colours[Math.floor(Math.random() * colours.length)],
+      life: 1
+    });
+  }
+
+  cancelAnimationFrame(_confettiRaf);
+  const frame = now => {
+    const t = now - start;
+    ctx.clearRect(0, 0, W, H);
+    for (const p of parts) {
+      p.vy += 0.32;
+      p.vx *= 0.995;
+      p.x += p.vx;
+      p.y += p.vy;
+      p.rot += p.vr;
+      p.life = Math.max(0, 1 - t / duration);
+      ctx.save();
+      ctx.globalAlpha = p.life;
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+      ctx.fillStyle = p.colour;
+      ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 1.6);
+      ctx.restore();
+    }
+    if (t < duration) _confettiRaf = requestAnimationFrame(frame);
+    else ctx.clearRect(0, 0, W, H);
+  };
+  _confettiRaf = requestAnimationFrame(frame);
+}
+
+function haptic(pattern = 18) {
+  try { if (navigator.vibrate) navigator.vibrate(pattern); } catch (e) {}
+}
+
+/* ---------------- achievements ---------------- */
+
+const BADGES = [
+  { id: "first",   name: "First Steps",   desc: "Log your first run",              icon: "run",     tier: "bronze", test: x => x.runs >= 1 },
+  { id: "five",    name: "5K Club",       desc: "Cover 5 km in one run",           icon: "route",   tier: "bronze", test: x => x.longest >= 5 },
+  { id: "ten",     name: "10K Club",      desc: "Cover 10 km in one run",          icon: "route",   tier: "silver", test: x => x.longest >= 10 },
+  { id: "half",    name: "Half Marathon", desc: "Cover 21.1 km in one run",        icon: "medal",   tier: "gold",   test: x => x.longest >= 21.1 },
+  { id: "century", name: "Centurion",     desc: "Run 100 km in total",             icon: "trend",   tier: "silver", test: x => x.totalKm >= 100 },
+  { id: "thousand", name: "Road Warrior", desc: "Run 1000 km in total",            icon: "bolt",    tier: "gold",   test: x => x.totalKm >= 1000 },
+  { id: "tenruns", name: "Habit Forming", desc: "Complete 10 runs",                icon: "calendar", tier: "bronze", test: x => x.runs >= 10 },
+  { id: "streak7", name: "Week Warrior",  desc: "Run 7 days in a row",             icon: "flame",   tier: "silver", test: x => x.dayStreak >= 7 },
+  { id: "early",   name: "Early Bird",    desc: "Start a run before 6 AM",         icon: "wind",    tier: "bronze", test: x => x.earlyBird },
+  { id: "night",   name: "Night Owl",     desc: "Start a run after 9 PM",          icon: "sparkle", tier: "bronze", test: x => x.nightOwl },
+  { id: "goal",    name: "Goal Getter",   desc: "Hit a weekly distance goal",      icon: "target",  tier: "silver", test: x => x.goalHit },
+  { id: "pace",    name: "Speedster",     desc: "A kilometre under 5:00",          icon: "bolt",    tier: "gold",   test: x => x.fastestKm != null && x.fastestKm < 300 },
+  { id: "comeback", name: "Comeback",     desc: "Run again after two weeks off",   icon: "heart",   tier: "silver", test: x => x.comeback },
+  { id: "plan",    name: "Plan Finisher", desc: "Complete a training plan",        icon: "flag",    tier: "gold",   test: x => x.planDone }
+];
+
+function achievementStats() {
+  const runs = realRuns().filter(r => !r.manual || r.manual);
+  const sorted = [...runs].sort((a, b) => new Date(a.date) - new Date(b.date));
+  const totalKm = runs.reduce((a, r) => a + r.distM, 0) / 1000;
+  const longest = runs.reduce((a, r) => Math.max(a, r.distM), 0) / 1000;
+
+  let dayStreak = 0;
+  const days = new Set(runs.map(r => isoDay(r.date)));
+  const cursor = new Date();
+  cursor.setHours(12, 0, 0, 0);
+  if (!days.has(isoDay(cursor))) cursor.setDate(cursor.getDate() - 1);
+  while (days.has(isoDay(cursor))) { dayStreak++; cursor.setDate(cursor.getDate() - 1); }
+
+  let earlyBird = false, nightOwl = false;
+  for (const r of runs) {
+    const h = new Date(r.date).getHours();
+    if (h < 6) earlyBird = true;
+    if (h >= 21) nightOwl = true;
+  }
+
+  const goalHit = weeklyBuckets(26).some(w => w.km >= effectiveWeeklyGoal().km && w.km > 0);
+
+  let fastestKm = null;
+  for (const r of runs) {
+    if (!r.points || r.points.length < 2) continue;
+    const { splits } = computeSplits(r.points, 1000);
+    for (const s of splits) if (!s.partial && (fastestKm == null || s.seconds < fastestKm)) fastestKm = s.seconds;
+  }
+
+  let comeback = false;
+  for (let i = 1; i < sorted.length; i++) {
+    const gap = (new Date(sorted[i].date) - new Date(sorted[i - 1].date)) / DAY_MS;
+    if (gap >= 14) { comeback = true; break; }
+  }
+
+  const planDone = !!(state.plan && planProgress(state.plan).pct >= 100);
+
+  return { runs: runs.length, totalKm, longest, dayStreak, earlyBird, nightOwl, goalHit, fastestKm, comeback, planDone };
+}
+
+function unlockedBadges() {
+  if (!state.achievements) state.achievements = {};
+  const stats = achievementStats();
+  const newly = [];
+  for (const b of BADGES) {
+    let ok = false;
+    try { ok = !!b.test(stats); } catch (e) { ok = false; }
+    if (ok && !state.achievements[b.id]) {
+      state.achievements[b.id] = new Date().toISOString();
+      newly.push(b);
+    }
+  }
+  if (newly.length) saveState();
+  return newly;
+}
+
+function badgeListMarkup(compact = false) {
+  if (!state.achievements) state.achievements = {};
+  const stats = achievementStats();
+  const earned = BADGES.filter(b => state.achievements[b.id]).length;
+  const items = BADGES.map(b => {
+    const on = !!state.achievements[b.id];
+    const label = b.id === "first" && stats.runs === 0 ? "Log a run to unlock" : b.desc;
+    return `
+      <div class="badge-item ${on ? "on tier-" + b.tier : ""}">
+        <div class="badge-ico">${icon(on ? "medal" : "lock")}</div>
+        <div class="badge-name">${escapeHtml(b.name)}</div>
+        <div class="badge-desc">${escapeHtml(on ? b.desc : label)}</div>
+      </div>`;
+  }).join("");
+
+  return `
+    <div class="row-between" style="margin-bottom:10px">
+      <span class="chart-sub">${earned} of ${BADGES.length} unlocked</span>
+      <button class="link-btn" data-act="open-badges">See all ${icon("chev")}</button>
+    </div>
+    <div class="badge-grid">${compact ? BADGES.slice(0, 4).map(b => {
+      const on = !!state.achievements[b.id];
+      return `<div class="badge-item ${on ? "on tier-" + b.tier : ""}">
+        <div class="badge-ico">${icon(on ? "medal" : "lock")}</div>
+        <div class="badge-name">${escapeHtml(b.name)}</div>
+      </div>`;
+    }).join("") : items}</div>
+  `;
+}
+
+function openBadgesSheet() {
+  const stats = achievementStats();
+  $("#sheetBadgesBody").innerHTML = `
+    <div class="sheet-head">
+      <div>
+        <div class="sheet-title">Badges</div>
+        <div class="sheet-sub">${BADGES.filter(b => state.achievements && state.achievements[b.id]).length} of ${BADGES.length} unlocked · ${stats.totalKm.toFixed(1)} km lifetime</div>
+      </div>
+      <button class="sheet-close" data-act="close-sheet">${icon("x")}</button>
+    </div>
+    <div class="badge-grid">${BADGES.map(b => {
+      const on = !!(state.achievements && state.achievements[b.id]);
+      return `<div class="badge-item ${on ? "on tier-" + b.tier : ""}">
+        <div class="badge-ico">${icon(on ? "medal" : "lock")}</div>
+        <div class="badge-name">${escapeHtml(b.name)}</div>
+        <div class="badge-desc">${escapeHtml(b.desc)}</div>
+      </div>`;
+    }).join("")}</div>
+    <button class="btn btn-primary mt-14" data-act="share-badges">${icon("download")} Share my badges</button>
+  `;
+  openSheet("#sheetBadges");
+}
+
+/* ---------------- celebration ---------------- */
+
+function showCelebration({ title, sub, badge, actionLabel, action }) {
+  const host = $("#celebration");
+  if (!host) return;
+  host.innerHTML = `
+    <div class="celeb-inner">
+      <div class="celeb-ring">${icon("medal")}</div>
+      <div class="celeb-title">${escapeHtml(title)}</div>
+      <div class="celeb-sub">${escapeHtml(sub || "")}</div>
+      ${actionLabel ? `<button class="btn btn-primary mt-14" id="celebAction">${escapeHtml(actionLabel)}</button>` : ""}
+      <button class="btn btn-ghost btn-sm mt-10" data-act="close-celebration">Close</button>
+    </div>`;
+  host.classList.remove("hidden");
+  celebrateConfetti(2200);
+  haptic([12, 40, 18]);
+  if (actionLabel && typeof action === "function") {
+    const b = $("#celebAction");
+    if (b) b.addEventListener("click", () => { closeCelebration(); action(); });
+  }
+}
+
+function closeCelebration() {
+  const host = $("#celebration");
+  if (host) { host.classList.add("hidden"); host.innerHTML = ""; }
+}
+
+/* ---------------- live milestones ---------------- */
+
+function checkLiveMilestone(session, stats) {
+  const km = stats.distM / 1000;
+  const marks = [
+    { at: 1, label: "1 KM" },
+    { at: 2, label: "2 KM" },
+    { at: 3, label: "3 KM" },
+    { at: 5, label: "5K CLUB" },
+    { at: 7.5, label: "7.5 KM" },
+    { at: 10, label: "10K CLUB" },
+    { at: 15, label: "15 KM" },
+    { at: 21.1, label: "HALF MARATHON" }
+  ];
+  const next = marks.find(m => km >= m.at && !session.cues.has("km" + m.at));
+  if (!next) return;
+  session.cues.add("km" + next.at);
+
+  haptic([10, 30, 10]);
+  beep(1180, 0.12);
+  setTimeout(() => beep(1480, 0.14), 130);
+  speak(`${next.at} kilometers.` + (next.at === 5 ? " Five K club. Nice." : ""));
+  celebrateConfetti(1300);
+
+  const el = $("#milestoneToast");
+  if (el) {
+    el.textContent = `${next.label} · ${fmtPace(stats.pace || 0)}${unitDef().pace}`;
+    el.classList.add("show");
+    clearTimeout(el._t);
+    el._t = setTimeout(() => el.classList.remove("show"), 3200);
+  }
+}
+
+/* ---------------- shareable run links ----------------
+   The whole run travels inside the URL hash, so anyone can open the link
+   with no server at all — perfect for WhatsApp groups. */
+
+const B64U = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
+
+function _putNum(n) {
+  let v = n < 0 ? (-n * 2 - 1) : (n * 2);
+  let out = "";
+  do {
+    let chunk = v & 31;
+    v = Math.floor(v / 32);
+    if (v) chunk |= 32;
+    out += B64U[chunk];
+  } while (v);
+  return out;
+}
+
+function _getNums(str) {
+  const out = [];
+  let v = 0, shift = 0;
+  for (const ch of str) {
+    const c = B64U.indexOf(ch);
+    if (c < 0) return out;
+    v += (c & 31) * Math.pow(2, shift);
+    if (c & 32) { shift += 5; }
+    else {
+      out.push(v % 2 ? -((v + 1) / 2) : v / 2);
+      v = 0; shift = 0;
+    }
+  }
+  return out;
+}
+
+function encodePolyline(points) {
+  let out = "";
+  let pLat = 0, pLng = 0, pT = 0;
+  for (const p of points) {
+    const lat = Math.round(p.lat * 1e5);
+    const lng = Math.round(p.lng * 1e5);
+    const t = Math.round(p.t / 1000);
+    out += _putNum(lat - pLat) + _putNum(lng - pLng) + _putNum(t - pT);
+    pLat = lat; pLng = lng; pT = t;
+  }
+  return out;
+}
+
+function decodePolyline(str) {
+  const nums = _getNums(str);
+  const pts = [];
+  let lat = 0, lng = 0, t = 0;
+  for (let i = 0; i + 2 < nums.length; i += 3) {
+    lat += nums[i]; lng += nums[i + 1]; t += nums[i + 2];
+    pts.push({ lat: lat / 1e5, lng: lng / 1e5, t: t * 1000 });
+  }
+  return pts;
+}
+
+function encodeRunForLink(run) {
+  const pitch = Math.max(1, Math.ceil((run.points || []).length / 260)); // keep URLs sane
+  const pts = (run.points || []).filter((_, i) => i % pitch === 0);
+  if (pts.length && run.points.length) pts.push(run.points[run.points.length - 1]);
+  const body = [
+    "1",
+    Math.round(new Date(run.date).getTime() / 1000),
+    Math.round(run.distM),
+    Math.round(run.durS),
+    encodePolyline(pts)
+  ].join(".");
+  return body;
+}
+
+function shareUrlForRun(run) {
+  const base = location.origin + location.pathname;
+  return `${base}#run=${encodeRunForLink(run)}`;
+}
+
+function parseSharedRun(hash) {
+  const m = /^#run=(.+)$/.exec(hash || "");
+  if (!m) return null;
+  const parts = decodeURIComponent(m[1]).split(".");
+  if (parts.length < 4 || parts[0] !== "1") return null;
+  const date = new Date(Number(parts[1]) * 1000).toISOString();
+  const distM = Number(parts[2]);
+  const durS = Number(parts[3]);
+  const points = parts[4] ? decodePolyline(parts[4]) : [];
+  if (!isFinite(distM) || !isFinite(durS)) return null;
+  return {
+    id: "shared_" + Date.now().toString(36),
+    date, distM, durS, points,
+    mode: "shared",
+    demo: false,
+    shared: true,
+    calories: caloriesFor(distM, durS)
+  };
+}
+
+async function shareRunLink(runId) {
+  const run = state.runs.find(r => r.id === runId);
+  if (!run) return;
+  const url = shareUrlForRun(run);
+  const label = unitDef().label;
+  const text = `${fmtDist(run.distM, 2)} ${label} · ${fmtTime(run.durS)} · ${fmtPace(runPace(run))}${unitDef().pace} — view it in STRIDE`;
+
+  if (navigator.share) {
+    try { await navigator.share({ title: "My run on STRIDE", text, url }); return; }
+    catch (e) { /* cancelled */ }
+  }
+  try {
+    await navigator.clipboard.writeText(`${text}\n${url}`);
+    toast("Link copied — paste it anywhere");
+  } catch (e) {
+    showDialog({ title: "Copy this link", text: url, actions: [{ label: "Done", style: "btn-primary" }] });
+  }
+}
+
+function openSharedRun(payload) {
+  const label = unitDef().label;
+  const pace = pacePerUnit(payload.distM, payload.durS);
+  $("#sheetSharedBody").innerHTML = `
+    <div class="sheet-head">
+      <div>
+        <div class="sheet-title">A shared run</div>
+        <div class="sheet-sub">${fmtDateFull(payload.date)} · ${fmtClock(payload.date)}</div>
+      </div>
+      <button class="sheet-close" data-act="close-sheet">${icon("x")}</button>
+    </div>
+    <div class="detail-map"><canvas id="sharedMap"></canvas></div>
+    <div class="detail-stats">
+      <div class="dstat"><div class="v num">${fmtDist(payload.distM)}<small>${label}</small></div><div class="l">Distance</div></div>
+      <div class="dstat"><div class="v num">${fmtTime(payload.durS)}</div><div class="l">Time</div></div>
+      <div class="dstat"><div class="v num">${fmtPace(pace)}<small>${unitDef().pace}</small></div><div class="l">Avg pace</div></div>
+      <div class="dstat"><div class="v num">${payload.calories}<small>kcal</small></div><div class="l">Est. calories</div></div>
+    </div>
+    <div class="card insight-card">
+      <div class="insight-ico">${icon("sparkle")}</div>
+      <div class="insight-body">
+        <div class="insight-title">Sent with STRIDE</div>
+        <div class="insight-text">This link carries the whole route — nothing is stored on a server.</div>
+      </div>
+    </div>
+    <button class="btn btn-primary mt-14" data-act="save-shared">${icon("plus")} Save to my runs</button>
+    <button class="btn btn-ghost btn-sm mt-10" data-act="close-sheet">Close</button>
+  `;
+  openSheet("#sheetShared");
+  ui.sharedRun = payload;
+  requestAnimationFrame(() => {
+    const c = $("#sharedMap");
+    if (c && payload.points && payload.points.length) drawMap(c, payload.points, { scaleBar: true });
+  });
+}
+
+function saveSharedRun() {
+  const p = ui.sharedRun;
+  if (!p) return;
+  if (state.runs.some(r => r.sharedLink === p.id)) { toast("Already saved"); return; }
+  const copy = { ...p, id: "run_" + Date.now().toString(36), shared: false, sharedLink: p.id };
+  state.runs.push(copy);
+  saveState();
+  closeSheets();
+  renderAll();
+  toast("Saved to your history");
+}
+
+/* ---------------- weekly recap card ---------------- */
+
+function weekRecapData() {
+  const b = weeklyBuckets(2);
+  const cur = b[b.length - 1];
+  const prev = b[b.length - 2];
+  const runs = realRuns().filter(r => new Date(r.date) >= cur.start);
+  const best = runs.reduce((a, r) => (!a || r.distM > a.distM ? r : a), null);
+  return {
+    km: cur.km,
+    runs: cur.runs,
+    prevKm: prev ? prev.km : 0,
+    timeS: runs.reduce((a, r) => a + r.durS, 0),
+    streak: weekStreak(),
+    best,
+    goal: effectiveWeeklyGoal().km
+  };
+}
+
+function drawRecapCard(canvas) {
+  const W = 1080, H = 1350;
+  canvas.width = W;
+  canvas.height = H;
+  const ctx = canvas.getContext("2d");
+  const d = weekRecapData();
+  const u = unitDef().label;
+
+  const g = ctx.createLinearGradient(0, 0, W, H);
+  g.addColorStop(0, "#0B1017");
+  g.addColorStop(0.5, "#070B11");
+  g.addColorStop(1, "#05080D");
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, W, H);
+
+  const glow = ctx.createRadialGradient(W * 0.2, H * 0.12, 0, W * 0.2, H * 0.12, W);
+  glow.addColorStop(0, "rgba(201,255,68,0.18)");
+  glow.addColorStop(1, "rgba(201,255,68,0)");
+  ctx.fillStyle = glow;
+  ctx.fillRect(0, 0, W, H);
+
+  ctx.fillStyle = "#C9FF44";
+  ctx.font = "800 44px Inter, system-ui, sans-serif";
+  ctx.fillText("STRIDE", 72, 104);
+  ctx.fillStyle = "rgba(238,243,250,0.55)";
+  ctx.font = "700 24px Inter, system-ui, sans-serif";
+  ctx.fillText("WEEKLY RECAP", 72, 140);
+
+  // headline
+  ctx.fillStyle = "#FFFFFF";
+  ctx.font = "800 150px Inter, system-ui, sans-serif";
+  const kmTxt = d.km.toFixed(1);
+  ctx.fillText(kmTxt, 72, 330);
+  const kmW = ctx.measureText(kmTxt).width;
+  ctx.fillStyle = "rgba(132,147,166,0.9)";
+  ctx.font = "800 52px Inter, system-ui, sans-serif";
+  ctx.fillText(u.toUpperCase(), 72 + kmW + 18, 330);
+
+  ctx.fillStyle = d.km >= d.prevKm ? "#C9FF44" : "rgba(238,243,250,0.6)";
+  ctx.font = "700 34px Inter, system-ui, sans-serif";
+  const diff = d.km - d.prevKm;
+  ctx.fillText(
+    Math.abs(diff) < 0.3 ? "on pace with last week" :
+      diff > 0 ? `▲ ${diff.toFixed(1)} ${u} more than last week` : `▼ ${Math.abs(diff).toFixed(1)} ${u} less than last week`,
+    72, 392
+  );
+
+  // route art of the best run
+  if (d.best && d.best.points && d.best.points.length > 2) {
+    const px = 72, py = 440, pw = W - 144, ph = 470;
+    ctx.fillStyle = "rgba(255,255,255,0.04)";
+    roundRect(ctx, px, py, pw, ph, 34); ctx.fill();
+    const { pts } = projectPoints(d.best.points, pw, ph, 60);
+    ctx.save();
+    ctx.translate(px, py);
+    ctx.lineJoin = "round"; ctx.lineCap = "round";
+    for (const pass of [0, 1]) {
+      ctx.beginPath();
+      let started = false;
+      for (const p of pts) {
+        if (!started || p.g) { ctx.moveTo(p.x, p.y); started = true; } else ctx.lineTo(p.x, p.y);
+      }
+      if (pass === 0) { ctx.strokeStyle = "rgba(201,255,68,0.16)"; ctx.lineWidth = 20; }
+      else { ctx.strokeStyle = "#C9FF44"; ctx.lineWidth = 6; ctx.shadowColor = "rgba(201,255,68,0.55)"; ctx.shadowBlur = 22; }
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+    }
+    ctx.restore();
+  }
+
+  // stat row
+  const stats = [
+    ["RUNS", String(d.runs)],
+    ["TIME", fmtTime(d.timeS)],
+    ["STREAK", `${d.streak}w`]
+  ];
+  const colW = (W - 144) / 3;
+  stats.forEach(([lab, val], i) => {
+    const cx = 72 + colW * i;
+    ctx.textAlign = "left";
+    ctx.fillStyle = "#EEF3FA";
+    ctx.font = "800 58px Inter, system-ui, sans-serif";
+    ctx.fillText(val, cx, 1040);
+    ctx.fillStyle = "rgba(132,147,166,0.8)";
+    ctx.font = "700 24px Inter, system-ui, sans-serif";
+    ctx.fillText(lab, cx, 1082);
+  });
+
+  // goal ring
+  const pct = clamp(d.km / Math.max(d.goal, 1), 0, 1);
+  ctx.beginPath();
+  ctx.arc(W - 170, 1010, 66, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * pct);
+  ctx.strokeStyle = "#C9FF44";
+  ctx.lineWidth = 14;
+  ctx.lineCap = "round";
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(W - 170, 1010, 66, 0, Math.PI * 2);
+  ctx.strokeStyle = "rgba(255,255,255,0.10)";
+  ctx.lineWidth = 14;
+  ctx.stroke();
+  ctx.fillStyle = "#EEF3FA";
+  ctx.font = "800 34px Inter, system-ui, sans-serif";
+  ctx.textAlign = "center";
+  ctx.fillText(`${Math.round(pct * 100)}%`, W - 170, 1022);
+
+  ctx.textAlign = "center";
+  const who = state.settings.name ? state.settings.name : "my week";
+  if (state.settings.name || state.settings.photo) {
+    ctx.font = "800 30px Inter, system-ui, sans-serif";
+    const nameW = ctx.measureText(who).width;
+    const avR = 28, gap = 14;
+    const startX = W / 2 - (avR * 2 + gap + nameW) / 2;
+    drawAvatarCircle(ctx, startX + avR, 1170, avR, { ringWidth: 3, fallbackBg: "rgba(201,255,68,0.16)" });
+    ctx.fillStyle = "#EEF3FA";
+    ctx.font = "800 30px Inter, system-ui, sans-serif";
+    ctx.textAlign = "left";
+    ctx.fillText(who, startX + avR * 2 + gap, 1180);
+    ctx.textAlign = "center";
+  } else {
+    ctx.fillStyle = "rgba(238,243,250,0.62)";
+    ctx.font = "600 28px Inter, system-ui, sans-serif";
+    ctx.fillText(who, W / 2, 1180);
+  }
+  ctx.fillStyle = "rgba(132,147,166,0.55)";
+  ctx.font = "600 22px Inter, system-ui, sans-serif";
+  ctx.fillText("made with STRIDE", W / 2, 1240);
+  ctx.textAlign = "left";
+}
+
+function openRecapSheet() {
+  const d = weekRecapData();
+  $("#sheetRecapBody").innerHTML = `
+    <div class="sheet-head">
+      <div>
+        <div class="sheet-title">Weekly recap</div>
+        <div class="sheet-sub">${d.runs} run${d.runs === 1 ? "" : "s"} · ${d.km.toFixed(1)} ${unitDef().label} this week</div>
+      </div>
+      <button class="sheet-close" data-act="close-sheet">${icon("x")}</button>
+    </div>
+    <div style="border-radius:18px;overflow:hidden;border:1px solid var(--line)">
+      <canvas id="recapCanvas" style="width:100%;display:block"></canvas>
+    </div>
+    <button class="btn btn-primary mt-14" data-act="share-recap">${icon("download")} Share recap</button>
+    <p class="footer-note">Post it on WhatsApp or Instagram — no account needed.</p>
+  `;
+  openSheet("#sheetRecap");
+  requestAnimationFrame(() => {
+    const c = $("#recapCanvas");
+    if (c) drawRecapCard(c);
+  });
+}
+
+async function shareRecapImage() {
+  const canvas = document.createElement("canvas");
+  drawRecapCard(canvas);
+  const blob = await new Promise(res => { try { canvas.toBlob(res, "image/png", 0.95); } catch (e) { res(null); } });
+  if (!blob) { toast("Could not create the image"); return; }
+  const file = new File([blob], "stride-week.png", { type: "image/png" });
+  if (navigator.canShare && navigator.canShare({ files: [file] })) {
+    try { await navigator.share({ files: [file], title: "My week on STRIDE" }); return; } catch (e) {}
+  }
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = "stride-week.png";
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 4000);
+  toast("Recap image saved");
+}
+
+/* ---------------- badges share image ---------------- */
+
+async function shareBadgesImage() {
+  const W = 1080, H = 1350;
+  const canvas = document.createElement("canvas");
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext("2d");
+  const g = ctx.createLinearGradient(0, 0, W, H);
+  g.addColorStop(0, "#0B1017"); g.addColorStop(1, "#05080D");
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  const glow = ctx.createRadialGradient(W * 0.5, 0, 0, W * 0.5, 0, W);
+  glow.addColorStop(0, "rgba(201,255,68,0.16)"); glow.addColorStop(1, "rgba(201,255,68,0)");
+  ctx.fillStyle = glow; ctx.fillRect(0, 0, W, H);
+
+  ctx.fillStyle = "#C9FF44";
+  ctx.font = "800 44px Inter, system-ui, sans-serif";
+  ctx.fillText("STRIDE", 72, 108);
+  ctx.fillStyle = "#FFFFFF";
+  ctx.font = "800 72px Inter, system-ui, sans-serif";
+  ctx.fillText(state.settings.name ? `${state.settings.name.split(/\s+/)[0]}'s badges` : "My badges", 72, 200);
+
+  const stats = achievementStats();
+  ctx.fillStyle = "rgba(238,243,250,0.65)";
+  ctx.font = "600 30px Inter, system-ui, sans-serif";
+  ctx.fillText(`${stats.totalKm.toFixed(0)} km run · ${stats.runs} runs`, 72, 250);
+
+  const cols = 3, cw = 280, ch = 190;
+  BADGES.forEach((b, i) => {
+    const on = !!(state.achievements && state.achievements[b.id]);
+    const x = 72 + (i % cols) * (cw + 30);
+    const y = 320 + Math.floor(i / cols) * (ch + 24);
+    ctx.fillStyle = on ? "rgba(201,255,68,0.12)" : "rgba(255,255,255,0.04)";
+    roundRect(ctx, x, y, cw, ch, 26); ctx.fill();
+    ctx.strokeStyle = on ? "rgba(201,255,68,0.35)" : "rgba(255,255,255,0.08)";
+    ctx.lineWidth = 2; roundRect(ctx, x, y, cw, ch, 26); ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(x + 52, y + 62, 26, 0, Math.PI * 2);
+    ctx.fillStyle = on ? "#C9FF44" : "rgba(255,255,255,0.12)";
+    ctx.fill();
+
+    ctx.fillStyle = on ? "#EEF3FA" : "rgba(238,243,250,0.4)";
+    ctx.font = "800 26px Inter, system-ui, sans-serif";
+    ctx.fillText(b.name.length > 14 ? b.name.slice(0, 13) + "…" : b.name, x + 24, y + 128);
+    ctx.fillStyle = on ? "rgba(201,255,68,0.85)" : "rgba(132,147,166,0.6)";
+    ctx.font = "700 20px Inter, system-ui, sans-serif";
+    ctx.fillText(on ? "UNLOCKED" : "LOCKED", x + 24, y + 160);
+  });
+
+  ctx.fillStyle = "rgba(132,147,166,0.55)";
+  ctx.font = "600 22px Inter, system-ui, sans-serif";
+  ctx.textAlign = "center";
+  ctx.fillText("made with STRIDE", W / 2, H - 60);
+  ctx.textAlign = "left";
+
+  const blob = await new Promise(res => { try { canvas.toBlob(res, "image/png", 0.95); } catch (e) { res(null); } });
+  if (!blob) { toast("Could not create the image"); return; }
+  const file = new File([blob], "stride-badges.png", { type: "image/png" });
+  if (navigator.canShare && navigator.canShare({ files: [file] })) {
+    try { await navigator.share({ files: [file], title: "My STRIDE badges" }); return; } catch (e) {}
+  }
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = "stride-badges.png";
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 4000);
+  toast("Badges image saved");
+}
+
+/* ---------------- post-run celebration ---------------- */
+
+function celebrateRun(run, autoDone) {
+  const newly = unlockedBadges();
+  const km = run.distM / 1000;
+  const pb = personalBests();
+  const isLongest = pb.longest && pb.longest.id === run.id && realRuns().length > 1;
+
+  if (newly.length) {
+    const b = newly[0];
+    showCelebration({
+      title: `${b.name} unlocked!`,
+      sub: b.desc,
+      actionLabel: "Share my badge",
+      action: () => openBadgesSheet()
+    });
+    return;
+  }
+  if (isLongest) {
+    showCelebration({
+      title: "Longest run yet!",
+      sub: `${fmtDist1(run.distM)} ${unitDef().label} — your previous best was ${fmtDist1(pb.longest.distM)} ${unitDef().label}.`,
+      actionLabel: "Share this run",
+      action: () => openShareSheet(run.id)
+    });
+    return;
+  }
+  if (km >= 5 && Math.floor(km) % 5 === 0) {
+    showCelebration({
+      title: `${Math.floor(km)}K done!`,
+      sub: `${fmtPace(runPace(run))}${unitDef().pace} average. Send it to someone who needs the nudge.`,
+      actionLabel: "Share this run",
+      action: () => openShareSheet(run.id)
+    });
+    return;
+  }
+  if (autoDone) {
+    toast(`${autoDone.title} ticked off in your plan`);
+  }
+}
+
+
+/* ===== js/06-app.js ===== */
 /* ============================================================
    STRIDE — 04 · APP
    tab routing, sheets, events, bootstrap
@@ -6123,6 +7781,7 @@ function switchTab(name) {
 
 function renderAll() {
   updateHeader();
+  refreshAvatarNodes();
   renderRunTab();
   renderHistory();
   renderStats();
@@ -6327,6 +7986,42 @@ function handleAction(act, el) {
     case "install-app":
       installApp();
       break;
+    case "open-profile":
+      openProfileSheet();
+      break;
+    case "profile-photo":
+      pickPhoto();
+      break;
+    case "profile-photo-remove":
+      removePhoto();
+      break;
+    case "save-profile":
+      saveProfile();
+      break;
+    case "force-start":
+      if (liveSession) liveSession.forceStart();
+      break;
+    case "close-celebration":
+      closeCelebration();
+      break;
+    case "open-badges":
+      openBadgesSheet();
+      break;
+    case "share-badges":
+      shareBadgesImage();
+      break;
+    case "open-recap":
+      openRecapSheet();
+      break;
+    case "share-recap":
+      shareRecapImage();
+      break;
+    case "share-link":
+      shareRunLink(id);
+      break;
+    case "save-shared":
+      saveSharedRun();
+      break;
     case "bg-note-close": {
       const note = $("#bgNote");
       if (note) note.classList.add("hidden");
@@ -6498,12 +8193,25 @@ document.addEventListener("input", e => {
   }
   if (e.target.id === "obName") {
     ob.name = e.target.value;
+    // live-update the initials in the onboarding avatar
+    const av = document.querySelector("#modalOnboard .avatar");
+    if (av) av.innerHTML = avatarFaceHTML(ob.photo, ob.name) + `<span class="avatar-cam">${icon("camera")}</span>`;
   }
 });
 
 document.addEventListener("change", e => {
   if (e.target.id === "setName") {
     renderRunTab();
+    refreshAvatarNodes();
+  }
+  if (e.target.id === "photoInput") {
+    const file = e.target.files && e.target.files[0];
+    if (file) handlePhotoFile(file);
+  }
+  if (e.target.id === "profileName") {
+    state.settings.name = e.target.value.trim().slice(0, 24);
+    saveState();
+    refreshAvatarNodes();
   }
 });
 
@@ -6528,6 +8236,7 @@ function finishOnboarding() {
   const nameInput = $("#obName");
   if (nameInput) ob.name = nameInput.value.trim();
   state.settings.name = ob.name;
+  state.settings.photo = ob.photo || null;
   state.settings.units = ob.units;
   state.settings.weeklyGoalKm = obGoalKm();
   state.onboarded = true;
@@ -6536,6 +8245,9 @@ function finishOnboarding() {
   $("#overlay").classList.remove("show");
   renderAll();
   toast(`Welcome${ob.name ? ", " + ob.name : ""} — ready when you are`);
+  if (!state.settings.photo) {
+    setTimeout(() => toast("Tip: tap your avatar to add a photo"), 2600);
+  }
 }
 
 /* ---------------- live-run housekeeping ---------------- */
@@ -6590,6 +8302,14 @@ document.addEventListener("visibilitychange", () => {
 
 /* ---------------- bootstrap ---------------- */
 
+function handleShareLink() {
+  const payload = parseSharedRun(location.hash);
+  if (!payload) return false;
+  openSharedRun(payload);
+  // keep the app usable underneath, but don't leave the hash around forever
+  return true;
+}
+
 function init() {
   loadState();
   applyTheme();
@@ -6610,7 +8330,9 @@ function init() {
     if ("speechSynthesis" in window) window.speechSynthesis.getVoices();
   } catch (e) {}
 
-  if (!state.onboarded) {
+  const shareOpened = handleShareLink();
+
+  if (!state.onboarded && !shareOpened) {
     setTimeout(openOnboarding, 260);
   } else {
     setTimeout(checkUnfinishedRun, 500);
@@ -6621,5 +8343,5 @@ function init() {
 init();
 
 </script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a5269767cb974621',t:'MTc5MzMyMzE2Mg=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a5269767cb974621',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
