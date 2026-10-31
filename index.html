@@ -1861,6 +1861,84 @@ svg { display: block; }
 [data-theme="light"] .profile-pencil { background: rgba(15, 23, 42, 0.06); }
 [data-theme="light"] .profile-stats > div { background: #FFFFFF; }
 
+/* ---------- weak GPS: help sheet + honest note ---------- */
+.armed-help {
+  margin-top: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--line-strong);
+  color: var(--txt);
+  font-size: 12px;
+  font-weight: 800;
+}
+.armed-help svg { width: 13px; height: 13px; }
+.armed-help.hidden { display: none; }
+
+#liveModeBadge { cursor: pointer; }
+
+.gps-reasons { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
+.gps-reason {
+  display: flex; gap: 12px; align-items: flex-start;
+  padding: 13px 14px;
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid var(--line);
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+.gps-reason b { display: block; color: var(--txt); font-size: 13.5px; margin-bottom: 2px; }
+.gps-ico {
+  flex: 0 0 auto;
+  width: 30px; height: 30px;
+  border-radius: 10px;
+  display: grid; place-items: center;
+  background: rgba(201, 255, 68, 0.12);
+  color: var(--volt);
+}
+.gps-ico svg { width: 15px; height: 15px; }
+
+.gps-steps { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+.gps-step {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--muted);
+  padding: 11px 13px;
+  border-radius: 13px;
+  background: rgba(99, 200, 255, 0.07);
+  border: 1px solid rgba(99, 200, 255, 0.18);
+}
+.gps-step span {
+  display: block;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 800;
+  color: var(--blue);
+  margin-bottom: 3px;
+}
+.gps-step b { color: var(--txt); }
+
+.weak-note {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: rgba(255, 176, 60, 0.08);
+  border: 1px solid rgba(255, 176, 60, 0.24);
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+.weak-note b { color: #FFB43C; }
+.weak-note svg { width: 16px; height: 16px; flex: 0 0 auto; margin-top: 1px; color: #FFB43C; }
+
 </style>
 </head>
 <body>
@@ -1918,7 +1996,7 @@ svg { display: block; }
           <span class="live-label" id="liveStatusText">Recording</span>
           <span class="spacer"></span>
           <button class="live-share" data-act="open-safety" aria-label="Safety">Safety</button>
-          <span class="badge badge-gps warn" id="liveModeBadge">Locating…</span>
+          <button class="badge badge-gps warn" id="liveModeBadge" data-act="open-gps-help">Locating…</button>
           <div class="speed-switch" id="speedSwitch">
             <button data-mult="1" class="on">1×</button>
             <button data-mult="2">2×</button>
@@ -1938,8 +2016,9 @@ svg { display: block; }
           <div class="armed-body">
             <div class="armed-title">Ready when you are</div>
             <div class="armed-sub">Recording starts the moment you move.</div>
+            <button class="armed-help hidden" data-act="open-gps-help">How to fix GPS</button>
           </div>
-          <button class="armed-btn hidden" data-act="force-start">Start anyway</button>
+          <button class="armed-btn" data-act="force-start">Start anyway</button>
         </div>
 
         <div class="map-wrap">
@@ -2064,6 +2143,11 @@ svg { display: block; }
 <div class="sheet" id="sheetShared" role="dialog" aria-modal="true" aria-label="Shared run">
   <div class="sheet-grab"><i></i></div>
   <div class="sheet-body" id="sheetSharedBody"></div>
+</div>
+
+<div class="sheet" id="sheetGps" role="dialog" aria-modal="true" aria-label="Fix your GPS">
+  <div class="sheet-grab"><i></i></div>
+  <div class="sheet-body" id="sheetGpsBody"></div>
 </div>
 
 <div class="sheet" id="sheetProfile" role="dialog" aria-modal="true" aria-label="Your profile">
@@ -2386,6 +2470,14 @@ function escapeHtml(s) {
 }
 
 /* ---------- geo math ---------- */
+
+/** median of a numeric array — used for GPS speed/accuracy filtering */
+function median(arr) {
+  if (!arr || !arr.length) return null;
+  const a = arr.slice().sort((x, y) => x - y);
+  const m = a.length >> 1;
+  return a.length % 2 ? a[m] : (a[m - 1] + a[m]) / 2;
+}
 
 function haversine(a, b) {
   const R = 6371000;
@@ -3583,6 +3675,12 @@ class LiveSession {
     this.movedFixes = 0;         // consecutive fixes that confirm real movement
     this.armAnchor = null;       // fixed starting point while waiting for movement
     this.armSigma = null;        // smoothed GPS noise estimate while arming
+    this.accBuf = [];            // recent accuracy values (coarse-fix detection)
+    this.speedBuf = [];          // recent GPS speeds (Doppler is steadier than positions)
+    this.coarse = false;         // phone is only giving an approximate fix
+    this.estimated = false;      // distance came from integrated speed, not positions
+    this.estM = 0;               // metres that were estimated (weak-GPS share)
+    this.rebindAt = 0;
     this.accPoint = null;        // last accepted (filtered) point
     this._kf = null;             // constant-velocity Kalman filter state
     this.simulated = false;
@@ -3694,12 +3792,22 @@ class LiveSession {
       this.watchId = navigator.geolocation.watchPosition(
         pos => this.onPosition(pos),
         err => this.onGpsError(err),
-        { enableHighAccuracy: true, maximumAge: 2000, timeout: 20000 }
+        // maximumAge 0 = never accept a cached (often network) fix
+        { enableHighAccuracy: true, maximumAge: 0, timeout: 15000 }
       );
     } catch (e) {
       this.gpsError = "unsupported";
       this.onGpsProblem();
     }
+  }
+
+  /** drop and re-request the watch — a stale watch can keep returning network fixes */
+  rebindWatch(reason) {
+    this.stopWatch();
+    this.rebindAt = Date.now();
+    this.lastFixAt = null;
+    this.bindWatch();
+    this.rebindReason = reason || "auto";
   }
 
   /* ---------- GPS acquisition ----------
@@ -3743,6 +3851,8 @@ class LiveSession {
   onPosition(pos) {
     const { latitude, longitude, accuracy, altitude } = pos.coords;
     const acc = typeof accuracy === "number" ? accuracy : null;
+    const spd = typeof pos.coords.speed === "number" && isFinite(pos.coords.speed) && pos.coords.speed >= 0
+      ? pos.coords.speed : null;
     this.gpsAccuracy = acc;
     this.fixCount = (this.fixCount || 0) + 1;
 
@@ -3750,67 +3860,93 @@ class LiveSession {
     const now = Date.now();
     this.lastFixAt = now;
 
+    // rolling accuracy history → are we stuck on a coarse (network) fix?
+    if (acc) {
+      this.accBuf.push(acc);
+      if (this.accBuf.length > 10) this.accBuf.shift();
+    }
+    const medAcc = this.accBuf.length ? median(this.accBuf) : (acc || null);
+    const settled20 = now - (this.firstFixAt || now) > 15000;
+    this.coarse = !!(medAcc && medAcc > 55 && settled20);
+
     // ---------- not started yet ----------
     if (!this.gpsReady) {
       if (!this.firstFixAt) this.firstFixAt = now;
-      const fix = { lat: latitude, lng: longitude, t: pos.simTime || now, alt: altitude, acc };
+      const fix = { lat: latitude, lng: longitude, t: pos.simTime || now, alt: altitude, acc, spd };
       this.head = fix;
 
       // show the runner on the map immediately — orientation beats a blank grid
       drawMap($("#liveMap"), [fix], { live: true, fix: this.head });
 
+      const coarse = this.startGate(acc) === "bad" || this.coarse;
       this.armBuf.push(fix);
-      if (this.armBuf.length > 12) this.armBuf.shift();
+      const cap = coarse ? 20 : 12;
+      if (this.armBuf.length > cap) this.armBuf.shift();
 
-      // anchor = average of the first fixes (fixed once, so it cannot drift with us),
-      // recent = average of the last fixes. Averaging stops a jittery ±60 m fix
-      // from looking like a 40 m sprint.
+      if (spd != null) {
+        this.speedBuf.push(spd);
+        if (this.speedBuf.length > 6) this.speedBuf.shift();
+      }
+      const medSpeed = this.speedBuf.length >= 2 ? median(this.speedBuf) : null;
+
+      // anchor = average of the first fixes (frozen once we have enough),
+      // recent = average of the last fixes. Averaging stops jitter from looking
+      // like a sprint; the anchor is frozen so it cannot drift along with us.
       if (!this.armAnchor && this.armBuf.length >= 5) this.armAnchor = this.meanFix(this.armBuf.slice(0, 5));
       const anchor = this.armAnchor || this.meanFix(this.armBuf);
       const recent = this.meanFix(this.armBuf.slice(-Math.min(4, this.armBuf.length)));
       this.anchor = anchor;
 
-      // how much do fixes at this accuracy actually wander? measure it, don't trust the number
+      // measured 1σ position noise from consecutive fixes
       let sigma = 0;
       if (this.armBuf.length > 1) {
         let sum = 0;
         for (let i = 1; i < this.armBuf.length; i++) sum += haversine(this.armBuf[i - 1], this.armBuf[i]);
-        sigma = (sum / (this.armBuf.length - 1)) / Math.SQRT2;      // step noise → 1σ position noise
+        sigma = (sum / (this.armBuf.length - 1)) / Math.SQRT2;
       }
-      // smooth the noise estimate — a single noisy second should not flip the decision
       this.armSigma = this.armSigma ? this.armSigma * 0.75 + sigma * 0.25 : sigma;
       sigma = this.armSigma;
-      const n1 = Math.min(5, this.armBuf.length), n2 = Math.min(4, this.armBuf.length);
-      const se = sigma * Math.sqrt(1 / n1 + 1 / n2);
 
+      const n = this.armBuf.length;
+      const se = sigma * Math.sqrt(2 / Math.max(3, Math.min(8, Math.floor(n / 2))));
       const moved = anchor && recent ? haversine(anchor, recent) : 0;
 
-      // Auto-start only on evidence we can defend: a genuinely good fix AND
-      // a measured noise level to match. Otherwise the runner taps "Start anyway"
-      // — we never invent a run out of GPS wander.
-      // auto-start when the fix is decent and its noise matches what the phone claims
-      const noisy = (acc && acc > 30) || sigma > Math.max(12, (acc || 20) * 1.6);
-      const need = clamp(3 * se, 15, 60);
-      const settled = this.armBuf.length >= 8;         // ~8 s of fixes before deciding
-      const weak = noisy || this.startGate(acc) === "bad";
+      // how far you must travel before a *position* test is believable at this accuracy
+      const need = clamp(Math.max(3 * se, (acc || 15) * 0.55, 18), 18, 90);
+      const settled = n >= (coarse ? 10 : 7);
 
-      if (settled && !noisy && moved >= need) this.movedFixes = (this.movedFixes || 0) + 1;
+      // two independent kinds of evidence:
+      //  1. the phone's own speed sensor (Doppler) — steady even at ±100 m
+      //  2. net displacement that clearly beats the measured noise
+      const speedSaysMoving = medSpeed != null && medSpeed >= 0.9 &&
+        moved >= Math.min(18, need * 0.5);
+      const positionSaysMoving = moved >= need && this.hasProgress(this.armBuf, need * 0.7);
+
+      if (settled && (speedSaysMoving || positionSaysMoving)) this.movedFixes = (this.movedFixes || 0) + 1;
       else this.movedFixes = 0;
 
-      const ready = settled && !noisy && moved >= need && this.movedFixes >= 2;
+      const ready = settled && this.movedFixes >= 2;
 
-      this.armDebug = { sigma: Math.round(sigma), se: Math.round(se), moved: Math.round(moved), need: Math.round(need), weak, settled, n: this.armBuf.length };
+      this.armDebug = {
+        sigma: Math.round(sigma), se: Math.round(se), moved: Math.round(moved),
+        need: Math.round(need), coarse, settled, n, speed: medSpeed == null ? null : +medSpeed.toFixed(2),
+        speedSaysMoving, positionSaysMoving, movedFixes: this.movedFixes
+      };
+
       if ((ready || this.forced) && this.status !== "paused") {
         const at = recent && !this.forced ? recent : fix;
         this.beginRecording({ lat: at.lat, lng: at.lng, t: fix.t, alt: altitude, acc });
         return;
       }
 
+      // one automatic re-acquire: a stale watch can sit on network fixes forever
+      if (this.coarse && !this.rebindAt && now - this.firstFixAt > 20000) this.rebindWatch("coarse");
+
       if (badge) {
         badge.className = "badge badge-gps warn";
         badge.textContent = acc ? `GPS ±${Math.round(acc)} m` : "Locating…";
       }
-      this.updateArmedUI(now - this.firstFixAt, acc, moved, need, weak);
+      this.updateArmedUI(now - this.firstFixAt, acc, moved, need, coarse, medSpeed);
       return;
     }
 
@@ -3821,20 +3957,14 @@ class LiveSession {
       badge.textContent = `GPS ±${Math.round(acc || 0)} m`;
     }
 
-    // very poor fixes are used for the map only, never for distance
-    if (acc && acc > 60) {
-      this.head = { lat: latitude, lng: longitude, t: pos.simTime || now, alt: altitude, acc };
-      return;
-    }
-
-    // smooth the raw fix so a stationary phone does not "run" 500 m
-    const fused = this.fuseFix({ lat: latitude, lng: longitude, t: pos.simTime || now, acc });
+    const fuse = this.fuseFix({ lat: latitude, lng: longitude, t: pos.simTime || now, acc });
     const p = {
-      lat: fused.lat,
-      lng: fused.lng,
+      lat: fuse.lat,
+      lng: fuse.lng,
       t: pos.simTime || now,
       alt: typeof altitude === "number" ? altitude : null,
-      acc
+      acc,
+      spd
     };
     this.head = p;
 
@@ -3843,18 +3973,61 @@ class LiveSession {
     // auto-paused: wake up once the runner actually moves again
     if (this.paused) {
       if (this.pauseReason === "manual") return;
+      const wake = spd != null && spd >= 0.9 ? 14 : Math.max(12, (acc || 10) * 0.7);
       if (!lastAcc) this.resume(true);
-      else if (haversine(lastAcc, p) >= Math.max(12, (acc || 10) * 0.7)) this.resume(true);
+      else if (haversine(lastAcc, p) >= wake) this.resume(true);
+      else if (spd != null && spd >= 1.1) this.resume(true);
       else return;
     }
+
+    // ---------- coarse fix while recording ----------
+    // Positions 60–150 m apart cannot be differenced into distance, but the
+    // phone's speed sensor can be integrated over time. That is what we do,
+    // and the run is marked "estimated" so nobody is misled.
+    if (acc && acc > 60) {
+      this.estimated = true;
+      const prev = this.points[this.points.length - 1];
+      // clamp the gap: after a pause or a backgrounded tab the timestamps can
+      // jump by minutes, and integrating that would invent kilometres
+      const dt = prev ? clamp((p.t - prev.t) / 1000, 0.5, 5) : 0;
+      let step = 0;
+
+      if (dt > 0 && spd != null && spd >= 0.4) {
+        step = Math.min(spd, 12) * dt;                       // Doppler speed integration
+      } else if (prev) {
+        // no speed sensor: compare against a 30 s old anchor so few metres of
+        // drift cancel out but genuine blocks of movement still register
+        if (!this.coarseAnchor) this.coarseAnchor = { ...p, t0: p.t };
+        const dtA = (p.t - this.coarseAnchor.t0) / 1000;
+        const netA = haversine(this.coarseAnchor, p);
+        if (dtA >= 25 && netA >= Math.max(80, (acc || 100) * 0.8)) {
+          step = netA;
+          this.coarseAnchor = { ...p, t0: p.t };
+        }
+      }
+
+      if (step >= 1) {
+        p.dOverride = step;
+        p.est = true;
+        p.moved = step;
+        this.estM += step;
+        this.accPoint = p;
+        this.lastMoveT = now;
+        this.lastFixT = now;
+        this.addPoint(p);
+      }
+      this.tick();
+      return;
+    }
+    this.coarseAnchor = null;
 
     if (lastAcc) {
       const d = haversine(lastAcc, p);
       const dt = Math.max((p.t - lastAcc.t) / 1000, 0.5);
       const minStep = clamp((acc || 10) * 0.9, 6, 30);   // a step, not a wander
 
-      if (d < minStep) return;                       // wander, not a step
-      if (d / dt > 9) {                              // impossible speed → break the line
+      if (d < minStep) return;
+      if (d / dt > 9) {                                  // impossible speed → break the line
         p.g = true;
         this.addPoint(p);
         this.accPoint = p;
@@ -3862,8 +4035,6 @@ class LiveSession {
       }
       p.moved = d;
       this.accPoint = p;
-      // only count this as movement if the filter says we are actually moving —
-      // otherwise GPS wander keeps auto-pause from ever firing
       if (this.filterSpeed() >= 0.55) this.lastMoveT = now;
       this.lastFixT = now;
     } else {
@@ -3876,6 +4047,22 @@ class LiveSession {
 
     this.addPoint(p);
     this.tick();
+  }
+
+  /** do the fixes progress in one direction, rather than wandering? */
+  hasProgress(buf, minNet) {
+    if (!buf || buf.length < 6) return false;
+    const third = Math.floor(buf.length / 3);
+    if (!third) return false;
+    const a = this.meanFix(buf.slice(0, third));
+    const b = this.meanFix(buf.slice(third, third * 2));
+    const c = this.meanFix(buf.slice(third * 2));
+    if (!a || !b || !c) return false;
+    const net = haversine(a, c);
+    if (net < minNet) return false;
+    // b should sit on the way from a to c, not off to the side
+    const mid = haversine(a, b) + haversine(b, c);
+    return mid <= net * 1.45;
   }
 
   /** constant-velocity Kalman filter — smooths GPS wander without lagging real movement */
@@ -3953,7 +4140,7 @@ class LiveSession {
   }
 
   /** visible "waiting / ready" card so a stationary phone never looks like a run */
-  updateArmedUI(waited, acc, moved, need, weak) {
+  updateArmedUI(waited, acc, moved, need, coarse, medSpeed) {
     const card = $("#armedCard");
     if (!card) return;
     card.classList.remove("hidden");
@@ -3961,23 +4148,29 @@ class LiveSession {
     const title = card.querySelector(".armed-title");
     const sub = card.querySelector(".armed-sub");
     const btn = card.querySelector("[data-act='force-start']");
+    const help = card.querySelector("[data-act='open-gps-help']");
     if (!title || !sub) return;
 
     const n = Math.round(moved || 0);
     const goal = Math.round(need || 0);
+    // "moving" as reported by the phone itself, not by position math
+    const speedMoving = medSpeed != null && medSpeed >= 0.9;
 
-    if (weak) {
-      title.textContent = "Your call — start anyway";
-      sub.textContent = "GPS is at ±" + Math.round(acc || 0) + " m, so we won't guess. Tap start and the timer runs; your line and distance firm up as the fix improves.";
-    } else if (n >= Math.max(10, goal * 0.75)) {
-      title.textContent = "Keep going — almost live";
-      sub.textContent = n + " m of " + goal + " m. Recording begins by itself once you pass that.";
+    if (coarse) {
+      title.textContent = "Your phone is only giving a rough location";
+      sub.textContent = "±" + Math.round(acc || 0) + " m is a network guess, not GPS. Tap “How to fix” — usually it is Location set to Approximate or GPS off. You can still start now; distance will be marked estimated.";
+    } else if (speedMoving || n >= Math.max(10, goal * 0.6)) {
+      title.textContent = "Keep walking — starting you now";
+      sub.textContent = speedMoving
+        ? "Movement detected. Recording starts on its own in a second or two."
+        : n + " m of " + goal + " m. Recording begins by itself once you pass that.";
     } else {
       title.textContent = "Ready when you are";
       sub.textContent = "Start walking — the timer begins on its own after a few steps. It never runs while you stand still.";
     }
 
-    if (btn) btn.classList.remove("hidden");   // never leave the runner with no way to start
+    if (help) help.classList.toggle("hidden", !coarse);
+    if (btn) btn.classList.remove("hidden");
   }
 
   /** user tapped "Start anyway" */
@@ -3994,7 +4187,7 @@ class LiveSession {
     const unitM = unitDef().m;
 
     if (last) {
-      const d = p.g ? 0 : haversine(last, p);
+      const d = p.g ? 0 : (typeof p.dOverride === "number" ? p.dOverride : haversine(last, p));
       const dtMs = Math.max(p.t - last.t, 1);
 
       if (d > 0) {
@@ -4190,7 +4383,7 @@ class LiveSession {
       $("#ctrlPause").classList.remove("hidden");
     }
 
-    $("#liveDist").textContent = fmtDist(s.distM, 2);
+    $("#liveDist").textContent = (this.estimated ? "≈" : "") + fmtDist(s.distM, 2);
     $("#liveTime").textContent = fmtTime(s.duration);
     $("#livePace").textContent = fmtPace(s.pace);
     $("#liveSplits").textContent = s.splits.length ? String(s.splits.length) : "—";
@@ -4229,9 +4422,11 @@ class LiveSession {
         ? (this.gpsAccuracy && this.gpsAccuracy > 30
             ? "Tap start when you're ready — or wait for a better fix"
             : "Start walking — recording begins by itself")
-        : s.distM < 15
-          ? "Tracking — distance starts with your first steps"
-          : `Next ${label} split in ${Math.max(0, Math.round(toSplit))} m`;
+        : this.estimated && !this.paused
+          ? "Weak GPS — distance is estimated from your speed"
+          : s.distM < 15
+            ? "Tracking — distance starts with your first steps"
+            : `Next ${label} split in ${Math.max(0, Math.round(toSplit))} m`;
     }
 
     this.updateWorkoutStep(s);
@@ -4370,6 +4565,7 @@ class LiveSession {
       }),
       mode: this.mode,
       demo: this.mode === "demo",   // simulated runs never enter real stats
+      gpsWeak: (this.estM > Math.max(30, this.distM * 0.3)) || undefined,   // mostly estimated?
       target: this.target,
       calories: caloriesFor(s.distM, s.duration)
     };
@@ -5479,6 +5675,10 @@ function openRunSummary(runId) {
       <div class="big-num"><span class="num">${fmtDist(run.distM)}</span> <span style="font-size:16px;color:var(--muted);letter-spacing:0">${u}</span></div>
       <div class="chart-sub" style="margin-top:6px">${fmtTime(run.durS)} · ${fmtPace(pace)}${unitDef().pace} · ${run.calories || caloriesFor(run.distM, run.durS)} kcal</div>
     </div>
+
+    ${run.gpsWeak
+      ? `<div class="weak-note">${icon("info")}<span><b>Distance is estimated.</b> GPS was too coarse for exact tracking on this run, so distance came from your phone's speed sensor. Time and route timing are exact.</span></div>`
+      : ""}
 
     ${run.points && run.points.length > 1
       ? `<div class="detail-map" style="height:150px;margin-top:14px"><canvas id="summaryMap"></canvas></div>`
@@ -7002,6 +7202,67 @@ function saveProfile() {
 }
 
 
+/* ---------------- GPS help ----------------
+   The most common real-world reason a phone reports ±100 m forever:
+   Location is switched off, the site was granted "Approximate" instead of
+   "Precise", or the phone is indoors. None of that is fixable in code —
+   it is fixable by the runner in four taps, so we say exactly where. */
+
+function openGpsHelp() {
+  const acc = liveSession ? liveSession.gpsAccuracy : null;
+  const accTxt = acc ? `±${Math.round(acc)} m` : "no fix yet";
+  $("#sheetGpsBody").innerHTML = `
+    <div class="sheet-head">
+      <div>
+        <div class="sheet-title">GPS is ${acc ? "coarse" : "still starting"}</div>
+        <div class="sheet-sub">Your phone is reporting ${accTxt}. Anything over ±30 m means it is not using real GPS yet.</div>
+      </div>
+      <button class="sheet-close" data-act="close-sheet">${icon("x")}</button>
+    </div>
+
+    <div class="gps-reasons">
+      <div class="gps-reason">
+        <span class="gps-ico">${icon("target")}</span>
+        <div><b>Location set to “Approximate”</b>
+        Chrome can be granted precise or approximate location. Approximate is usually ±1–3 km, but some phones report around ±100 m.</div>
+      </div>
+      <div class="gps-reason">
+        <span class="gps-ico">${icon("bolt")}</span>
+        <div><b>Location is off, or GPS only</b>
+        Turning Location on and allowing “Google Location Accuracy” gives the phone satellites as well as Wi-Fi/cell.</div>
+      </div>
+      <div class="gps-reason">
+        <span class="gps-ico">${icon("wind")}</span>
+        <div><b>You are indoors</b>
+        Concrete blocks GPS. Step outside, or near a window, for 20–30 seconds.</div>
+      </div>
+    </div>
+
+    <div class="gps-steps">
+      <div class="gps-step"><span>Android</span>Settings → Location → on. Then Chrome → ⋮ → Settings → Site settings → Location → STRIDE → <b>Allow</b>, and turn on <b>Precise location</b>.</div>
+      <div class="gps-step"><span>iPhone</span>Settings → Privacy &amp; Security → Location Services → Safari → <b>Precise Location</b> on.</div>
+    </div>
+
+    <button class="btn btn-primary" data-act="gps-retry">${icon("route")} Re-acquire GPS</button>
+    <button class="btn btn-ghost" data-act="close-sheet">Start the run anyway</button>
+    <p class="footer-note">With a coarse fix the app still records your time, and estimates distance from the phone's speed sensor. Weak-GPS runs are marked “estimated”.</p>
+  `;
+  openSheet("#sheetGps");
+}
+
+/** drop the current watch and ask for a fresh, high-accuracy fix */
+function reacquireGps() {
+  if (!liveSession || liveSession.mode !== "gps") { toast("Start a run first"); return; }
+  liveSession.rebindWatch("manual");
+  liveSession.armBuf = [];
+  liveSession.armAnchor = null;
+  liveSession.armSigma = null;
+  liveSession.speedBuf = [];
+  liveSession.movedFixes = 0;
+  toast("Re-requesting a precise fix — give it 20 seconds");
+}
+
+
 /* ===== js/05-social.js ===== */
 /* ============================================================
    STRIDE — 05 · SOCIAL
@@ -7986,6 +8247,13 @@ function handleAction(act, el) {
     case "install-app":
       installApp();
       break;
+    case "open-gps-help":
+      openGpsHelp();
+      break;
+    case "gps-retry":
+      closeSheets();
+      reacquireGps();
+      break;
     case "open-profile":
       openProfileSheet();
       break;
@@ -8343,5 +8611,5 @@ function init() {
 init();
 
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a5269767cb974621',t:'MTc5MzMyMzE2Mg=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a5269767cb974621',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>
